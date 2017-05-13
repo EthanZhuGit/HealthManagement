@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="HealthManagementDateBase" />
+    <version value="1" />
+    <list>
+        <mapping class="com.example.healthmanagement.model.BloodPressureItem" />
+        <mapping class="com.example.healthmanagement.model.BloodSugarItem" />
+        <mapping class="com.example.healthmanagement.model.User" />
+    </list>
+</litepal>
