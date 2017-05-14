@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HealthManagement.iml" filepath="$PROJECT_DIR$/HealthManagement.iml" />
+      <module fileurl="file://$PROJECT_DIR$/drag-sort-listview/drag-sort-listview.iml" filepath="$PROJECT_DIR$/drag-sort-listview/drag-sort-listview.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/wear/wear.iml" filepath="$PROJECT_DIR$/wear/wear.iml" />
     </modules>

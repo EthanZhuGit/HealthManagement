@@ -1,13 +1,29 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.healthmanagement.HomeFragment">
-    <ListView
-        android:id="@+id/card_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null">
-    </ListView>
+    tools:context="com.example.healthmanagement.fragment.HomeFragment">
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.example.healthmanagement.ListViewForScrollView
+            android:id="@+id/card_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </com.example.healthmanagement.ListViewForScrollView>
+        <Button
+            android:id="@+id/btn_card_show_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_setting"
+            android:layout_gravity="center_horizontal"
+            android:text="管理卡片"
+            android:textSize="12sp"
+            android:background="#00000000"/>
+    </LinearLayout>
+
+
+</ScrollView>

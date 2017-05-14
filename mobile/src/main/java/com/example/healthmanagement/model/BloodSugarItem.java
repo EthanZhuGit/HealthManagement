@@ -1,6 +1,9 @@
 package com.example.healthmanagement.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
@@ -10,7 +13,7 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/10 0010.
  */
 
-public class BloodSugarItem extends DataSupport{
+public class BloodSugarItem extends DataSupport implements Parcelable {
 
     @Column(unique = true)
     private Date date;
@@ -93,4 +96,46 @@ public class BloodSugarItem extends DataSupport{
     public float getBeforeSleep() {
         return beforeSleep;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.date != null ? this.date.getTime() : -1);
+        dest.writeFloat(this.beforeBreakfast);
+        dest.writeFloat(this.afterBreakfast);
+        dest.writeFloat(this.beforeLunch);
+        dest.writeFloat(this.afterLunch);
+        dest.writeFloat(this.beforeSupper);
+        dest.writeFloat(this.afterSupper);
+        dest.writeFloat(this.beforeSleep);
+    }
+
+    protected BloodSugarItem(Parcel in) {
+        long tmpDate = in.readLong();
+        this.date = tmpDate == -1 ? null : new Date(tmpDate);
+        this.beforeBreakfast = in.readFloat();
+        this.afterBreakfast = in.readFloat();
+        this.beforeLunch = in.readFloat();
+        this.afterLunch = in.readFloat();
+        this.beforeSupper = in.readFloat();
+        this.afterSupper = in.readFloat();
+        this.beforeSleep = in.readFloat();
+    }
+
+    public static final Parcelable.Creator<BloodSugarItem> CREATOR = new Parcelable.Creator<BloodSugarItem>() {
+        @Override
+        public BloodSugarItem createFromParcel(Parcel source) {
+            return new BloodSugarItem(source);
+        }
+
+        @Override
+        public BloodSugarItem[] newArray(int size) {
+            return new BloodSugarItem[size];
+        }
+    };
 }

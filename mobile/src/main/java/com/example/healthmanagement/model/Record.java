@@ -9,6 +9,13 @@ import java.util.List;
  */
 
 public class Record {
+
+    public static final String BLOOD_PRESSURE = "blood_pressure";
+    public static final String BLOOD_SUGAR = "blood_sugar";
+    public static final String STEP_COUNT = "step_count";
+    public static final String HEART_RATE = "heart_rate";
+    public static final String BLOOD_OXYGEN = "blood_oxygen";
+
     private String name;
 
     public String getName() {
