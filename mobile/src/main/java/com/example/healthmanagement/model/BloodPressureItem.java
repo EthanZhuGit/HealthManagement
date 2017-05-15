@@ -20,20 +20,7 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
     private float systolicPressure;
     private float diastolicPressure;
 
-    /**
-     *
-     * @param date 记录时间
-     * @param systolicPressure 收缩压
-     * @param diastolicPressure 舒张压
-     */
 
-
-
-    public BloodPressureItem(Date date,  float systolicPressure, float diastolicPressure) {
-        this.date = date;
-        this.systolicPressure = systolicPressure;
-        this.diastolicPressure = diastolicPressure;
-    }
 
     public Date getDate() {
         return date;

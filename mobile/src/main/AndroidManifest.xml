@@ -27,7 +27,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.BloodPressureRecordActivity" />
-        <activity android:name=".activity.CardShowControlActivity"></activity>
+        <activity android:name=".activity.CardShowControlActivity"
+            android:theme="@style/App"
+            android:label="卡片管理">
+
+        </activity>
     </application>
 
 </manifest>

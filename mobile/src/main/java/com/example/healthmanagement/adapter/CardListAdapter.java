@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.model.BloodPressureItem;
+import com.example.healthmanagement.model.BloodPressureRecord;
+import com.example.healthmanagement.model.BloodSugarRecord;
 import com.example.healthmanagement.model.Record;
 import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -80,6 +82,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
         if (record != null) {
             switch (record.getName()) {
                 case "blood_pressure":
+                    BloodPressureRecord bloodPressureRecord = (BloodPressureRecord) record;
                     signName.setText(record.getName());
                     signImg.setImageResource(R.drawable.ic_blood_pressure);
 
@@ -128,7 +131,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                     }
                     */
 
-                    List<BloodPressureItem> bloodPressureItemList = record.getBloodPressureItemList();
+                    List<BloodPressureItem> bloodPressureItemList = bloodPressureRecord.getItemList();
                     Collections.sort(bloodPressureItemList, new Comparator<BloodPressureItem>() {
                         @Override
                         public int compare(BloodPressureItem o1, BloodPressureItem o2) {
@@ -139,70 +142,79 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                             }
                         }
                     });
-                    for (BloodPressureItem item :
-                            bloodPressureItemList) {
-                        String dateString = new Date(item.getDate().getTime()).toString();
-                        Log.d(TAG, "getView: " + dateList.indexOf(dateString));
-                        if (dateList.indexOf(dateString) == -1) {
-                            dateList.add(dateString);
-                            systolicPressure.add(item.getSystolicPressure());
-                            diastolicPressure.add(item.getDiastolicPressure());
-                        } else {
-                            int index = dateList.indexOf(dateString);
-                            float oldSPNum = systolicPressure.get(index);
-                            float newSPNum = item.getSystolicPressure();
-                            systolicPressure.set(index, (oldSPNum + newSPNum) / 2);
-                            float oldDPNum = diastolicPressure.get(index);
-                            float newDPNum = item.getDiastolicPressure();
-                            diastolicPressure.set(index, (oldDPNum + newDPNum) / 2);
+                    if (bloodPressureItemList.size()!=0){
+                        for (BloodPressureItem item :
+                                bloodPressureItemList) {
+                            String dateString = new Date(item.getDate().getTime()).toString();
+                            Log.d(TAG, "getView: " + dateList.indexOf(dateString));
+                            if (dateList.indexOf(dateString) == -1) {
+                                dateList.add(dateString);
+                                systolicPressure.add(item.getSystolicPressure());
+                                diastolicPressure.add(item.getDiastolicPressure());
+                            } else {
+                                int index = dateList.indexOf(dateString);
+                                float oldSPNum = systolicPressure.get(index);
+                                float newSPNum = item.getSystolicPressure();
+                                systolicPressure.set(index, (oldSPNum + newSPNum) / 2);
+                                float oldDPNum = diastolicPressure.get(index);
+                                float newDPNum = item.getDiastolicPressure();
+                                diastolicPressure.set(index, (oldDPNum + newDPNum) / 2);
+                            }
                         }
+
+
+                        ScatterChart scatterChart = (ScatterChart) view.findViewById(R.id.scatter_chart);
+                        List<Entry> systolicPressureEntryList = convert(systolicPressure);
+                        List<Entry> diastolicPressureEntryList = convert(diastolicPressure);
+
+                        ScatterDataSet systolicPressureDataSet = new ScatterDataSet(systolicPressureEntryList, "收缩压");
+                        systolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.TRIANGLE);
+                        systolicPressureDataSet.setScatterShapeSize(22);
+                        systolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                        systolicPressureDataSet.setValueTextSize(10);
+                        systolicPressureDataSet.setDrawValues(false);
+
+                        ScatterDataSet diastolicPressureDataSet = new ScatterDataSet(diastolicPressureEntryList, "舒张压");
+                        diastolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+                        diastolicPressureDataSet.setScatterShapeSize(20);
+                        diastolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                        diastolicPressureDataSet.setDrawValues(false);
+
+                        List<IScatterDataSet> scatterDataSetList = new ArrayList<>();
+                        scatterDataSetList.add(systolicPressureDataSet);
+                        scatterDataSetList.add(diastolicPressureDataSet);
+                        ScatterData scatterData = new ScatterData(scatterDataSetList);
+                        scatterChart.setData(scatterData);
+                        scatterChart.getDescription().setEnabled(false);
+                        scatterChart.getLegend().setEnabled(false);
+                        scatterChart.setScaleEnabled(false);
+                        scatterChart.setTouchEnabled(false);
+
+
+                        XAxis xAxis = scatterChart.getXAxis();
+                        xAxis.setValueFormatter(new XF(dateList));
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        xAxis.setAxisMaximum(7.3f);
+                        xAxis.setAxisMinimum(-0.3f);
+                        xAxis.setAxisLineWidth(2);
+
+                        YAxis yAxis = scatterChart.getAxisLeft();
+                        yAxis.setAxisLineWidth(2);
+                        YAxis yAxis1 = scatterChart.getAxisRight();
+                        yAxis1.setEnabled(false);
                     }
 
-
-                    ScatterChart scatterChart = (ScatterChart) view.findViewById(R.id.scatter_chart);
-                    List<Entry> systolicPressureEntryList = convert(systolicPressure);
-                    List<Entry> diastolicPressureEntryList = convert(diastolicPressure);
-
-                    ScatterDataSet systolicPressureDataSet = new ScatterDataSet(systolicPressureEntryList, "收缩压");
-                    systolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.TRIANGLE);
-                    systolicPressureDataSet.setScatterShapeSize(22);
-                    systolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-                    systolicPressureDataSet.setValueTextSize(10);
-                    systolicPressureDataSet.setDrawValues(false);
-
-                    ScatterDataSet diastolicPressureDataSet = new ScatterDataSet(diastolicPressureEntryList, "舒张压");
-                    diastolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
-                    diastolicPressureDataSet.setScatterShapeSize(20);
-                    diastolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-                    diastolicPressureDataSet.setDrawValues(false);
-
-                    List<IScatterDataSet> scatterDataSetList = new ArrayList<>();
-                    scatterDataSetList.add(systolicPressureDataSet);
-                    scatterDataSetList.add(diastolicPressureDataSet);
-                    ScatterData scatterData = new ScatterData(scatterDataSetList);
-                    scatterChart.setData(scatterData);
-                    scatterChart.getDescription().setEnabled(false);
-                    scatterChart.getLegend().setEnabled(false);
-                    scatterChart.setScaleEnabled(false);
-                    scatterChart.setTouchEnabled(false);
-
-
-                    XAxis xAxis = scatterChart.getXAxis();
-                    xAxis.setValueFormatter(new XF(dateList));
-                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                    xAxis.setAxisMaximum(7.3f);
-                    xAxis.setAxisMinimum(-0.3f);
-                    xAxis.setAxisLineWidth(2);
-
-                    YAxis yAxis = scatterChart.getAxisLeft();
-                    yAxis.setAxisLineWidth(2);
-                    YAxis yAxis1 = scatterChart.getAxisRight();
-                    yAxis1.setEnabled(false);
 
                     break;
                 case "blood_sugar":
                     signName.setText(record.getName());
                     signImg.setImageResource(R.drawable.ic_blood_sugar);
+                    break;
+                case Record.BLOOD_OXYGEN:
+                    signName.setText(record.getName());
+                    break;
+                case Record.HEART_RATE:
+                    signName.setText(record.getName());
                     break;
             }
         }

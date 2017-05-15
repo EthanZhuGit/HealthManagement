@@ -10,9 +10,7 @@
     <com.mobeta.android.dslv.DragSortListView
         android:id="@+id/card_show_control_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="0dp"
-        android:paddingTop="0dp"
+        android:layout_height="match_parent"
         dslv:collapsed_height="2dp"
         dslv:drag_enabled="true"
         dslv:drag_scroll_start="0.33"
@@ -25,5 +23,6 @@
         dslv:sort_enabled="true"
         dslv:track_drag_sort="false"
         dslv:use_default_controller="true" />
+
 
 </LinearLayout>
