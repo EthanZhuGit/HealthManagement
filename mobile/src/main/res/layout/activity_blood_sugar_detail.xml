@@ -4,12 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.healthmanagement.activity.BloodSugarDetailActivity">
+    tools:context="com.example.healthmanagement.activity.BloodSugarDetailActivity"
+    android:orientation="vertical">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart"
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
 
-    </com.github.mikephil.charting.charts.LineChart>
+
 </LinearLayout>

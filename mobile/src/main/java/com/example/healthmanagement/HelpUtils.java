@@ -11,6 +11,8 @@ import com.example.healthmanagement.model.IsCardShow;
 import com.example.healthmanagement.model.Record;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,6 +72,12 @@ public class HelpUtils {
                 list) {
             Log.d(TAG, "LogArrayList: " + i.getName()+" "+i.isShow()    );
         }
+    }
+
+    public static String getTimeWithoutSecInString(Date date) {
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
     }
 
 }

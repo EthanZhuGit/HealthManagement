@@ -37,8 +37,11 @@
         <activity
             android:name=".activity.BloodPressureDetailActivity"
             android:label="血压" />
+
         <activity android:name=".activity.BloodSugarDetailActivity" />
-        <activity android:name=".activity.BloodSugarRecordActivity"></activity>
+        <activity android:name=".activity.BloodSugarRecordActivity">
+
+        </activity>
     </application>
 
 </manifest>

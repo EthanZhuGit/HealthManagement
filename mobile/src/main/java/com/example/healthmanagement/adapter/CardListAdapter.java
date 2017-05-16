@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.healthmanagement.MyAxisValueFormatter;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.model.BloodPressureItem;
 import com.example.healthmanagement.model.BloodPressureRecord;
@@ -85,7 +86,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onCardClickListener.onCardClick(v,recordName);
             }
         });
 
@@ -178,7 +179,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                         List<Entry> diastolicPressureEntryList = convert(diastolicPressure);
 
                         ScatterDataSet systolicPressureDataSet = new ScatterDataSet(systolicPressureEntryList, "收缩压");
-                        systolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.TRIANGLE);
+                        systolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
                         systolicPressureDataSet.setScatterShapeSize(22);
                         systolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
                         systolicPressureDataSet.setValueTextSize(10);
@@ -187,7 +188,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                         ScatterDataSet diastolicPressureDataSet = new ScatterDataSet(diastolicPressureEntryList, "舒张压");
                         diastolicPressureDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
                         diastolicPressureDataSet.setScatterShapeSize(20);
-                        diastolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                        diastolicPressureDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
                         diastolicPressureDataSet.setDrawValues(false);
 
                         List<IScatterDataSet> scatterDataSetList = new ArrayList<>();
@@ -202,9 +203,9 @@ public class CardListAdapter extends ArrayAdapter<Record> {
 
 
                         XAxis xAxis = scatterChart.getXAxis();
-                        xAxis.setValueFormatter(new XF(dateList));
+                        xAxis.setValueFormatter(new MyAxisValueFormatter(dateList));
                         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                        xAxis.setAxisMaximum(7.3f);
+                        xAxis.setAxisMaximum(6.3f);
                         xAxis.setAxisMinimum(-0.3f);
                         xAxis.setAxisLineWidth(2);
 
@@ -228,37 +229,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                     break;
             }
         }
-
-
         return view;
     }
-
-    class XF implements IAxisValueFormatter {
-        private ArrayList<String> values;
-
-        public XF(ArrayList<String> values) {
-            this.values = values;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            if ((int) value < values.size()) {
-                String s = values.get((int) value);
-                SimpleDateFormat output = new SimpleDateFormat("M/d");
-                SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date date = null;
-                try {
-                    date = input.parse(s);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return output.format(date);
-            } else {
-                return " ";
-            }
-
-        }
-    }
-
 }
 

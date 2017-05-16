@@ -169,12 +169,13 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
 
     @Override
     public void onCardClick(View v,String name) {
+        Log.d(TAG, "onCardClick: ");
         switch (v.getId()) {
             case R.id.layout_include_scatter:
                 switch (name) {
                     case Record.BLOOD_PRESSURE:
                         Intent intent = new Intent(getContext(), BloodPressureDetailActivity.class);
-
+                        startActivity(intent);
                 }
 
                 break;

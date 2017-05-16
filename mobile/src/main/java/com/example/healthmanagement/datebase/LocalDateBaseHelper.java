@@ -13,8 +13,6 @@ import com.example.healthmanagement.model.HeartRateRecord;
 import com.example.healthmanagement.model.User;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,16 +26,23 @@ public class LocalDateBaseHelper {
     private static final String TAG = "TAG" + "LocalDateBaseHelper";
 
     /*
-     * 获取指定天数之前的开始时间
+     * 获取从现在开始指定天数之前的开始时间
      * 今天是5月13号任何时间，则返回 5月(13-i)号 00:00:00
      */
-    private static Date getDaysBeforeStartTime(int i) {
+    public static Date getStartTimeOfSpecifiedDaysAgo(int i) {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(calendar1.get(Calendar.YEAR), calendar1.get(Calendar.MONTH), calendar1.get(Calendar.DAY_OF_MONTH) - i,
                 0, 0, 0);
         return calendar1.getTime();
     }
 
+    public static Date getStartTimeOfSpecifiedDaysAgo(Date date, int i) {
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date);
+        calendar1.set(calendar1.get(Calendar.YEAR), calendar1.get(Calendar.MONTH), calendar1.get(Calendar.DAY_OF_MONTH) - i,
+                0, 0, 0);
+        return calendar1.getTime();
+    }
     public static BloodOxygenRecord getBloodOxygenRecord() {
         return new BloodOxygenRecord(getRecord(BloodOxygenItem.class));
     }
@@ -46,11 +51,24 @@ public class LocalDateBaseHelper {
         return new BloodPressureRecord(getRecord(BloodPressureItem.class));
     }
 
+
+    public static BloodPressureRecord getAllBloodPressureData() {
+        return new BloodPressureRecord(DataSupport.findAll(BloodPressureItem.class));
+    }
+
     public static BloodSugarRecord getBloodSugarRecord() {
         return new BloodSugarRecord(getRecord(BloodSugarItem.class));
     }
+
+    public static BloodSugarRecord getAllBloodSugarData() {
+        return new BloodSugarRecord(DataSupport.findAll(BloodSugarItem.class));
+    }
     public static HeartRateRecord getHeartRateRecord() {
         return new HeartRateRecord(getRecord(HeartRateItem.class));
+    }
+
+    public static HeartRateRecord getAllHeartRateData() {
+        return new HeartRateRecord(DataSupport.findAll(HeartRateItem.class));
     }
 
     private static <T> List<T> getRecord(Class<T> tClass) {
@@ -64,7 +82,7 @@ public class LocalDateBaseHelper {
         int totalNum = DataSupport.count(tClass);
         while (daysWithRecord <= 6) {
             endDate=date.getTime();
-            startDate = getDaysBeforeStartTime(queryDays).getTime();
+            startDate = getStartTimeOfSpecifiedDaysAgo(queryDays).getTime();
             oldListSize = list.size();
             list = DataSupport.where("date between ? and ?", String.valueOf(startDate), String.valueOf(endDate)).find(tClass);
             if (list.size() > oldListSize) {
@@ -78,6 +96,7 @@ public class LocalDateBaseHelper {
         Log.d(TAG, "getRecord: " + tClass.getSimpleName() + " " + list.size());
         return list;
     }
+
 
     /**
      * @param uid               用户id

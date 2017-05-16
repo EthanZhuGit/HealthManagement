@@ -13,6 +13,7 @@ public class ListViewForScrollView extends ListView {
         public ListViewForScrollView(Context context, AttributeSet attrs) {
             super(context, attrs);
         }
+
         public ListViewForScrollView(Context context, AttributeSet attrs,
                                      int defStyle) {
             super(context, attrs, defStyle);
