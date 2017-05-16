@@ -23,4 +23,16 @@ public class HeartRateRecord implements Record {
 
         return heartRateItemList;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof HeartRateRecord)) {
+            return false;
+        }
+        HeartRateRecord heartRateRecord = (HeartRateRecord) obj;
+        return this.getName().equals(heartRateRecord.getName());
+    }
 }

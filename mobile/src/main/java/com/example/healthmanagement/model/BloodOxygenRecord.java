@@ -22,4 +22,16 @@ public class BloodOxygenRecord implements Record {
     public List<BloodOxygenItem> getItemList() {
         return bloodOxygenItemList;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof BloodOxygenRecord)) {
+            return false;
+        }
+        BloodOxygenRecord bloodOxygenRecord = (BloodOxygenRecord) obj;
+        return this.getName().equals(bloodOxygenRecord.getName());
+    }
 }

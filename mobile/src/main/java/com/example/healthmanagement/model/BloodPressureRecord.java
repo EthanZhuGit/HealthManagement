@@ -23,4 +23,17 @@ public class BloodPressureRecord implements Record {
     public List<BloodPressureItem> getItemList() {
         return bloodPressureItemList;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof BloodPressureRecord)) {
+            return false;
+        }
+        BloodPressureRecord bloodPressureRecord = (BloodPressureRecord) obj;
+        return this.getName().equals(bloodPressureRecord.getName());
+    }
 }

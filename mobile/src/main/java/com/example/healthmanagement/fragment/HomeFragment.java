@@ -29,7 +29,7 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements CardListAdapter.OnRecordButtonClickListener {
+public class HomeFragment extends Fragment implements CardListAdapter.OnCardClickListener {
 
     private static final String TAG = "TAG" + "HomeFragment";
     private static final String USER_CLOUD_ID = "user_cloud_id";
@@ -81,9 +81,10 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Bundle bundle;
         switch (requestCode) {
             case REQUEST_CODE_CARDCONTROL:
-                Bundle bundle = data.getExtras();
+                bundle = data.getExtras();
                 ArrayList<IsCardShow> l = bundle.getParcelableArrayList("list_return");
                 cardShowControlArrayList.clear();
                 cardShowControlArrayList.addAll(l);
@@ -91,6 +92,19 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
                 Log.d(TAG, "onActivityResult: " + records.size());
                 cardListAdapter.notifyDataSetChanged();
                 break;
+            case REQUEST_CODE_RECORD_BLOODPRESSURE:
+                if (data!=null) {
+                    bundle = data.getExtras();
+                    BloodPressureItem item = bundle.getParcelable("bp_return");
+                    LocalDateBaseHelper.saveBloodPressureItem("18086742831", item);
+                    Record record = LocalDateBaseHelper.getBloodPressureRecord();
+                    if (records.contains(record)) {
+                        records.set(records.indexOf(record), record);
+                    }
+                    cardListAdapter.notifyDataSetChanged();
+                }
+                break;
+
         }
     }
 
@@ -115,12 +129,12 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
 
             }
         });
-//        User user = new User();
-//        user.setUsername("朱一新");
-//        user.setPhoneNum("18086742831");
-//        user.setAge(22);
-//        user.setSex("男");
-//        user.save();
+        User user = new User();
+        user.setUsername("朱一新");
+        user.setPhoneNum("18086742831");
+        user.setAge(22);
+        user.setSex("男");
+        user.save();
 //        java.util.Date date = new java.util.Date();
 //        LocalDateBaseHelper.saveBloodPressureItem("18086742831", new java.util.Date(1494217984000L), 100.0f, 90.0f, new java.util.Date(1494217984000L));
 //        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494397812000L), 115.0f, 80.0f,new java.util.Date(1494397812000L));
@@ -148,18 +162,32 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
 //        record = new BloodPressureRecord(bloodPressureItemListTest);
 //        records.add(record);
         cardListAdapter = new CardListAdapter(getContext(), R.layout.card_item, records);
-        cardListAdapter.setOnRecordButtonClickListener(this);
+        cardListAdapter.setOnCardClickListener(this);
         cardListView.setAdapter(cardListAdapter);
         return view;
     }
 
     @Override
-    public void onRecordButtonClick(String name) {
-        switch (name) {
-            case Record.BLOOD_PRESSURE:
-                Intent intent = new Intent(getContext(), BloodPressureRecordActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_RECORD_BLOODPRESSURE);
+    public void onCardClick(View v,String name) {
+        switch (v.getId()) {
+            case R.id.layout_include_scatter:
+                switch (name) {
+                    case Record.BLOOD_PRESSURE:
+                        Intent intent = new Intent(getContext(), BloodPressureDetailActivity.class);
+
+                }
+
+                break;
+            case R.id.btn_record:
+                switch (name) {
+                    case Record.BLOOD_PRESSURE:
+                        Intent intent = new Intent(getContext(), BloodPressureRecordActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_RECORD_BLOODPRESSURE);
+                        break;
+                }
+                break;
         }
+
     }
 
     private void setRecordList() {

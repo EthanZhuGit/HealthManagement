@@ -75,6 +75,7 @@ public class LocalDateBaseHelper {
                 break;
             }
         }
+        Log.d(TAG, "getRecord: " + tClass.getSimpleName() + " " + list.size());
         return list;
     }
 
@@ -97,7 +98,15 @@ public class LocalDateBaseHelper {
         bloodPressureItem.save();
         bloodPressureItemList.add(bloodPressureItem);
         user.saveOrUpdate("phonenum=?", uid);
+    }
 
+    public static void saveBloodPressureItem(String uid, BloodPressureItem item) {
+        List<User> users = DataSupport.where("phonenum=?", uid).find(User.class);
+        User user = users.get(0);
+        List<BloodPressureItem> bloodPressureItemList = user.getBloodPressureItemList();
+        item.save();
+        bloodPressureItemList.add(item);
+        user.saveOrUpdate("phonenum=?", uid);
     }
 
 }

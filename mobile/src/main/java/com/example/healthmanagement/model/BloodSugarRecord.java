@@ -23,4 +23,16 @@ public class BloodSugarRecord implements Record {
     public List<BloodSugarItem> getItemList() {
         return bloodSugarItemList;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof BloodSugarRecord)) {
+            return false;
+        }
+        BloodSugarRecord BloodSugarRecord = (BloodSugarRecord) obj;
+        return this.getName().equals(BloodSugarRecord.getName());
+    }
 }

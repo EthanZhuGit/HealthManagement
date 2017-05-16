@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.healthmanagement.R;
@@ -42,14 +43,14 @@ import java.util.List;
 public class CardListAdapter extends ArrayAdapter<Record> {
     private static final String TAG = "TAG" + "CardListAdapter";
     private int resourceId;
-    private OnRecordButtonClickListener onRecordButtonClickListener;
+    private OnCardClickListener onCardClickListener;
 
-    public interface OnRecordButtonClickListener{
-        public void onRecordButtonClick(String name);
+    public interface OnCardClickListener{
+        public void onCardClick(View v,String name);
     }
 
-    public void setOnRecordButtonClickListener(OnRecordButtonClickListener clickListener) {
-        this.onRecordButtonClickListener=clickListener;
+    public void setOnCardClickListener(OnCardClickListener clickListener) {
+        this.onCardClickListener=clickListener;
     }
     public CardListAdapter(Context context, int textViewResourceId, List<Record> objects) {
         super(context, textViewResourceId, objects);
@@ -68,6 +69,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
         Record record = getItem(position);
         final String recordName = record.getName();
         View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
+        RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.layout_include_scatter);
         TextView signName = (TextView) view.findViewById(R.id.txt_card_name);
         ImageView signImg = (ImageView) view.findViewById(R.id.img_card_icon);
         TextView latestDetail = (TextView) view.findViewById(R.id.txt_latest_data_detail);
@@ -76,9 +78,17 @@ public class CardListAdapter extends ArrayAdapter<Record> {
         recordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onRecordButtonClickListener.onRecordButtonClick(recordName);
+                onCardClickListener.onCardClick(v,recordName);
             }
         });
+
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         if (record != null) {
             switch (record.getName()) {
                 case "blood_pressure":
