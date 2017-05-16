@@ -24,7 +24,7 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
     private float beforeSupper;
     private float afterSupper;
     private float beforeSleep;
-
+    private Date lastModifyDate;
 
     public Date getDate() {
         return date;
@@ -62,6 +62,14 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         return beforeSleep;
     }
 
+    public Date getLastModifyDate() {
+        return lastModifyDate;
+    }
+
+    public void setLastModifyDate(Date lastModifyDate) {
+        this.lastModifyDate = lastModifyDate;
+    }
+
 
     @Override
     public int describeContents() {
@@ -78,6 +86,10 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         dest.writeFloat(this.beforeSupper);
         dest.writeFloat(this.afterSupper);
         dest.writeFloat(this.beforeSleep);
+        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
+    }
+
+    public BloodSugarItem() {
     }
 
     protected BloodSugarItem(Parcel in) {
@@ -90,9 +102,11 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         this.beforeSupper = in.readFloat();
         this.afterSupper = in.readFloat();
         this.beforeSleep = in.readFloat();
+        long tmpLastModifyDate = in.readLong();
+        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
     }
 
-    public static final Parcelable.Creator<BloodSugarItem> CREATOR = new Parcelable.Creator<BloodSugarItem>() {
+    public static final Creator<BloodSugarItem> CREATOR = new Creator<BloodSugarItem>() {
         @Override
         public BloodSugarItem createFromParcel(Parcel source) {
             return new BloodSugarItem(source);

@@ -19,19 +19,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/App">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.BloodPressureRecordActivity" />
-        <activity android:name=".activity.CardShowControlActivity"
-            android:theme="@style/App"
-            android:label="卡片管理">
-
-        </activity>
+        <activity
+            android:name=".activity.BloodPressureRecordActivity"
+            android:label="记录血压" />
+        <activity
+            android:name=".activity.CardShowControlActivity"
+            android:label="卡片管理" />
+        <activity
+            android:name=".activity.BloodPressureDetailActivity"
+            android:label="血压" />
+        <activity android:name=".activity.BloodSugarDetailActivity" />
+        <activity android:name=".activity.BloodSugarRecordActivity"></activity>
     </application>
 
 </manifest>

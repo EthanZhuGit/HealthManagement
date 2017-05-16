@@ -19,8 +19,11 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
     private Date date;
     private float systolicPressure;
     private float diastolicPressure;
+    private Date lastModifyDate;
 
+    public BloodPressureItem() {
 
+    }
 
     public Date getDate() {
         return date;
@@ -48,6 +51,14 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
         this.diastolicPressure = diastolicPressure;
     }
 
+    public Date getLastModifyDate() {
+        return lastModifyDate;
+    }
+
+    public void setLastModifyDate(Date lastModifyDate) {
+        this.lastModifyDate = lastModifyDate;
+    }
+
 
     @Override
     public int describeContents() {
@@ -59,6 +70,7 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
         dest.writeLong(this.date != null ? this.date.getTime() : -1);
         dest.writeFloat(this.systolicPressure);
         dest.writeFloat(this.diastolicPressure);
+        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
     }
 
     protected BloodPressureItem(Parcel in) {
@@ -66,9 +78,11 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
         this.date = tmpDate == -1 ? null : new Date(tmpDate);
         this.systolicPressure = in.readFloat();
         this.diastolicPressure = in.readFloat();
+        long tmpLastModifyDate = in.readLong();
+        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
     }
 
-    public static final Parcelable.Creator<BloodPressureItem> CREATOR = new Parcelable.Creator<BloodPressureItem>() {
+    public static final Creator<BloodPressureItem> CREATOR = new Creator<BloodPressureItem>() {
         @Override
         public BloodPressureItem createFromParcel(Parcel source) {
             return new BloodPressureItem(source);

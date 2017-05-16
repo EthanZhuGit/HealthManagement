@@ -12,6 +12,8 @@ import android.widget.Button;
 import com.example.healthmanagement.HelpUtils;
 import com.example.healthmanagement.ListViewForScrollView;
 import com.example.healthmanagement.R;
+import com.example.healthmanagement.activity.BloodPressureDetailActivity;
+import com.example.healthmanagement.activity.BloodPressureRecordActivity;
 import com.example.healthmanagement.activity.CardShowControlActivity;
 import com.example.healthmanagement.adapter.CardListAdapter;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
@@ -20,6 +22,7 @@ import com.example.healthmanagement.model.BloodPressureItem;
 import com.example.healthmanagement.model.BloodPressureRecord;
 import com.example.healthmanagement.model.IsCardShow;
 import com.example.healthmanagement.model.Record;
+import com.example.healthmanagement.model.User;
 
 import org.litepal.crud.DataSupport;
 
@@ -32,6 +35,16 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
     private static final String USER_CLOUD_ID = "user_cloud_id";
     public static final int REQUEST_CODE_CARDCONTROL = 100;
     public static final int RESULT_CODE_CARDCONTROL = 101;
+    public static final int REQUEST_CODE_RECORD_BLOODPRESSURE=102;
+    public static final int RESULT_CODE_RECORD_BLOODPRESSURE=103;
+    public static final int REQUEST_CODE_RECORD_BLOODSUGAR=104;
+    public static final int RESULT_CODE_RECORD_BLOODSUGAR=105;
+    public static final int REQUEST_CODE_RECORD_BLOODOXYGEN=106;
+    public static final int RESULT_CODE_RECORD_BLOODOXYGEN=107;
+    public static final int REQUEST_CODE_RECORD_HEARTRATE=108;
+    public static final int RESULT_CODE_RECORD_HEARTRATE=109;
+    public static final int REQUEST_CODE_RECORD_SREPCOUNT=110;
+    public static final int RESULT_CODE_RECORD_STEPCOUNT=111;
 
     private ListViewForScrollView cardListView;
     private Button btnCardShowControl;
@@ -39,7 +52,6 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
     private String userCloudId;
     private Record record;
     private List<Record> records = new ArrayList<>();
-    private List<BloodPressureItem> bloodPressureItemListTest = new ArrayList<>();
 
     private ArrayList<IsCardShow> cardShowControlArrayList = new ArrayList<>();
 
@@ -103,22 +115,20 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
 
             }
         });
-
-        setRecordList();
-
-
-//        bloodPressureItemListTest.add(new BloodPressureItem(new java.util.Date(1494397812000L), 115.0f, 80.0f));
-//        bloodPressureItemListTest.add(new BloodPressureItem(new java.util.Date(1494292745000L), 130.0f, 100.0f));
-//        bloodPressureItemListTest.add(new BloodPressureItem(new java.util.Date(1494292749000L), 125.0f, 92.0f));
-//        DataSupport.saveAll(bloodPressureItemListTest);
-
 //        User user = new User();
 //        user.setUsername("朱一新");
 //        user.setPhoneNum("18086742831");
 //        user.setAge(22);
 //        user.setSex("男");
-//        user.setBloodPressureItemList(bloodPressureItemListTest);
 //        user.save();
+//        java.util.Date date = new java.util.Date();
+//        LocalDateBaseHelper.saveBloodPressureItem("18086742831", new java.util.Date(1494217984000L), 100.0f, 90.0f, new java.util.Date(1494217984000L));
+//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494397812000L), 115.0f, 80.0f,new java.util.Date(1494397812000L));
+//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494292745000L), 130.0f, 100.0f,new java.util.Date(1494292745000L));
+//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494292749000L), 125.0f, 92.0f,new java.util.Date(1494292749000L));
+//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",date,150.0f,90.0f,date);
+        setRecordList();
+
 //
 //        BloodPressureItem item = new BloodPressureItem(new java.util.Date(), 150.0f, 90.0f);
 //        item.save();
@@ -138,6 +148,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
 //        record = new BloodPressureRecord(bloodPressureItemListTest);
 //        records.add(record);
         cardListAdapter = new CardListAdapter(getContext(), R.layout.card_item, records);
+        cardListAdapter.setOnRecordButtonClickListener(this);
         cardListView.setAdapter(cardListAdapter);
         return view;
     }
@@ -146,7 +157,8 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
     public void onRecordButtonClick(String name) {
         switch (name) {
             case Record.BLOOD_PRESSURE:
-
+                Intent intent = new Intent(getContext(), BloodPressureRecordActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_RECORD_BLOODPRESSURE);
         }
     }
 
@@ -157,22 +169,29 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnRecordBu
             if (i.isShow()) {
                 switch (i.getName()) {
                     case Record.BLOOD_OXYGEN:
-                        r.add(LocalDateBaseHelper.getOneWeekBloodOxygenRecord());
+                        r.add(LocalDateBaseHelper.getBloodOxygenRecord());
                         break;
                     case Record.BLOOD_PRESSURE:
-                        r.add(LocalDateBaseHelper.getOnWeekBloodPressureRecord());
+                        r.add(LocalDateBaseHelper.getBloodPressureRecord());
                         break;
                     case Record.BLOOD_SUGAR:
-                        r.add(LocalDateBaseHelper.getOneWeekBloodSugarRecord());
+                        r.add(LocalDateBaseHelper.getBloodSugarRecord());
                         break;
                     case Record.HEART_RATE:
-                        r.add(LocalDateBaseHelper.getOneWeekHeartRateRecord());
+                        r.add(LocalDateBaseHelper.getHeartRateRecord());
                         break;
                 }
             }
         }
         records.clear();
         records.addAll(r);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        HelpUtils.saveCardShowStatus(getContext(), cardShowControlArrayList);
+        Log.d(TAG, "onStop: ");
     }
 }
 

@@ -12,11 +12,12 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/15 0015.
  */
 
-public class HeartRateItem extends DataSupport implements Parcelable{
+public class HeartRateItem extends DataSupport implements Parcelable {
 
     @Column(unique = true)
-    Date date;
-    int rate;
+    private Date date;
+    private int rate;
+    private Date lastModifyDate;
 
 
     public Date getDate() {
@@ -35,6 +36,14 @@ public class HeartRateItem extends DataSupport implements Parcelable{
         this.rate = rate;
     }
 
+    public Date getLastModifyDate() {
+        return lastModifyDate;
+    }
+
+    public void setLastModifyDate(Date lastModifyDate) {
+        this.lastModifyDate = lastModifyDate;
+    }
+
 
     @Override
     public int describeContents() {
@@ -45,12 +54,18 @@ public class HeartRateItem extends DataSupport implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.date != null ? this.date.getTime() : -1);
         dest.writeInt(this.rate);
+        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
+    }
+
+    public HeartRateItem() {
     }
 
     protected HeartRateItem(Parcel in) {
         long tmpDate = in.readLong();
         this.date = tmpDate == -1 ? null : new Date(tmpDate);
         this.rate = in.readInt();
+        long tmpLastModifyDate = in.readLong();
+        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
     }
 
     public static final Creator<HeartRateItem> CREATOR = new Creator<HeartRateItem>() {

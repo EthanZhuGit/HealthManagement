@@ -6,5 +6,7 @@
         <mapping class="com.example.healthmanagement.model.BloodPressureItem" />
         <mapping class="com.example.healthmanagement.model.BloodSugarItem" />
         <mapping class="com.example.healthmanagement.model.User" />
+        <mapping class="com.example.healthmanagement.model.BloodOxygenItem" />
+        <mapping class="com.example.healthmanagement.model.HeartRateItem" />
     </list>
 </litepal>

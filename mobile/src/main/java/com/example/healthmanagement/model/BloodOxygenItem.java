@@ -12,11 +12,12 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/15 0015.
  */
 
-public class BloodOxygenItem extends DataSupport implements Parcelable{
+public class BloodOxygenItem extends DataSupport implements Parcelable {
 
     @Column(unique = false)
-    Date date;
-    float number;
+    private Date date;
+    private float number;
+    private Date lastModifyDate;
 
     public Date getDate() {
         return date;
@@ -34,6 +35,14 @@ public class BloodOxygenItem extends DataSupport implements Parcelable{
         this.number = number;
     }
 
+    public Date getLastModifyDate() {
+        return lastModifyDate;
+    }
+
+    public void setLastModifyDate(Date lastModifyDate) {
+        this.lastModifyDate = lastModifyDate;
+    }
+
 
     @Override
     public int describeContents() {
@@ -44,6 +53,7 @@ public class BloodOxygenItem extends DataSupport implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.date != null ? this.date.getTime() : -1);
         dest.writeFloat(this.number);
+        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
     }
 
     public BloodOxygenItem() {
@@ -53,6 +63,8 @@ public class BloodOxygenItem extends DataSupport implements Parcelable{
         long tmpDate = in.readLong();
         this.date = tmpDate == -1 ? null : new Date(tmpDate);
         this.number = in.readFloat();
+        long tmpLastModifyDate = in.readLong();
+        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
     }
 
     public static final Creator<BloodOxygenItem> CREATOR = new Creator<BloodOxygenItem>() {

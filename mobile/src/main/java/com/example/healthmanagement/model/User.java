@@ -21,16 +21,8 @@ public class User extends DataSupport {
     String sex;
     private List<BloodPressureItem> bloodPressureItemList = new ArrayList<>();
     private List<BloodSugarItem> bloodSugarItemList = new ArrayList<>();
-
-    public User(String username, String phoneNum, int age,
-                String sex, List<BloodPressureItem> bloodPressureItemList, List<BloodSugarItem> bloodSugarItemList) {
-        this.username = username;
-        this.phoneNum = phoneNum;
-        this.age = age;
-        this.sex = sex;
-        this.bloodPressureItemList = bloodPressureItemList;
-        this.bloodSugarItemList = bloodSugarItemList;
-    }
+    private List<HeartRateItem> heartRateItemList = new ArrayList<>();
+    private List<BloodOxygenItem> bloodOxygenItemList = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -78,5 +70,21 @@ public class User extends DataSupport {
 
     public void setBloodSugarItemList(List<BloodSugarItem> bloodSugarItemList) {
         this.bloodSugarItemList = bloodSugarItemList;
+    }
+
+    public List<HeartRateItem> getHeartRateItemList() {
+        return heartRateItemList;
+    }
+
+    public void setHeartRateItemList(List<HeartRateItem> heartRateItemList) {
+        this.heartRateItemList = heartRateItemList;
+    }
+
+    public List<BloodOxygenItem> getBloodOxygenItemList() {
+        return bloodOxygenItemList;
+    }
+
+    public void setBloodOxygenItemList(List<BloodOxygenItem> bloodOxygenItemList) {
+        this.bloodOxygenItemList = bloodOxygenItemList;
     }
 }

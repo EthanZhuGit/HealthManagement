@@ -31,6 +31,7 @@ public class HelpUtils {
 
     public static ArrayList<IsCardShow> getCardShowControlList(Context context) {
         String[] array = new String[]{Record.BLOOD_PRESSURE, Record.BLOOD_SUGAR, Record.HEART_RATE, Record.BLOOD_OXYGEN};
+
         ArrayList<IsCardShow> isCardShows = new ArrayList<>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
