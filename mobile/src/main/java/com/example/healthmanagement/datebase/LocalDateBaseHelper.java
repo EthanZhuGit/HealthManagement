@@ -33,6 +33,7 @@ public class LocalDateBaseHelper {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(calendar1.get(Calendar.YEAR), calendar1.get(Calendar.MONTH), calendar1.get(Calendar.DAY_OF_MONTH) - i,
                 0, 0, 0);
+
         return calendar1.getTime();
     }
 
@@ -43,34 +44,55 @@ public class LocalDateBaseHelper {
                 0, 0, 0);
         return calendar1.getTime();
     }
+
     public static BloodOxygenRecord getBloodOxygenRecord() {
         return new BloodOxygenRecord(getRecord(BloodOxygenItem.class));
     }
+    public static BloodOxygenRecord getAllBloodOxygenRecord() {
+        return new BloodOxygenRecord(DataSupport.order("date asc").find(BloodOxygenItem.class));
+    }
+
 
     public static BloodPressureRecord getBloodPressureRecord() {
+        List<BloodPressureItem> list = getRecord(BloodPressureItem.class);
+        for (BloodPressureItem i:
+             list) {
+            Log.d(TAG, "getBloodPressureRecord: " + i.getDate() + " " + i.getSystolicPressure() + " " + i.getDiastolicPressure());
+        }
         return new BloodPressureRecord(getRecord(BloodPressureItem.class));
     }
-
-
     public static BloodPressureRecord getAllBloodPressureData() {
-        return new BloodPressureRecord(DataSupport.findAll(BloodPressureItem.class));
+//        return new BloodPressureRecord(DataSupport.findAll(BloodPressureItem.class));
+        List<BloodPressureItem> l = DataSupport.findAll(BloodPressureItem.class);
+        Log.d(TAG, "getAllBloodPressureData: " + l.size());
+        List<BloodPressureItem> list=DataSupport.order("date asc").find(BloodPressureItem.class);
+        Log.d(TAG, "getAllBloodPressureData: " + list.size());
+        return new BloodPressureRecord(DataSupport.order("date asc").find(BloodPressureItem.class));
     }
+
 
     public static BloodSugarRecord getBloodSugarRecord() {
         return new BloodSugarRecord(getRecord(BloodSugarItem.class));
     }
-
     public static BloodSugarRecord getAllBloodSugarData() {
-        return new BloodSugarRecord(DataSupport.findAll(BloodSugarItem.class));
+//        return new BloodSugarRecord(DataSupport.findAll(BloodSugarItem.class));
+        return new BloodSugarRecord(DataSupport.order("date asc").find(BloodSugarItem.class));
     }
+
+
     public static HeartRateRecord getHeartRateRecord() {
         return new HeartRateRecord(getRecord(HeartRateItem.class));
     }
-
     public static HeartRateRecord getAllHeartRateData() {
-        return new HeartRateRecord(DataSupport.findAll(HeartRateItem.class));
+        return new HeartRateRecord(DataSupport.order("date asc").find(HeartRateItem.class));
     }
 
+    /**
+     * 获取7天的记录
+     * @param tClass
+     * @param <T>
+     * @return
+     */
     private static <T> List<T> getRecord(Class<T> tClass) {
         List<T> list = new ArrayList<>();
         Date date = new Date();
@@ -84,7 +106,7 @@ public class LocalDateBaseHelper {
             endDate=date.getTime();
             startDate = getStartTimeOfSpecifiedDaysAgo(queryDays).getTime();
             oldListSize = list.size();
-            list = DataSupport.where("date between ? and ?", String.valueOf(startDate), String.valueOf(endDate)).find(tClass);
+            list = DataSupport.where("date between ? and ?", String.valueOf(startDate), String.valueOf(endDate)).order("date asc").find(tClass);
             if (list.size() > oldListSize) {
                 daysWithRecord++;
             }
@@ -97,6 +119,22 @@ public class LocalDateBaseHelper {
         return list;
     }
 
+    /**
+     * 获取指定某一天的记录
+     * @param tClass
+     * @param date 指定某一天内的任意时刻Date对象
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> getRecordInOneSpecifiedDay(Class<T> tClass, Date date) {
+        long startTime = getStartTimeOfSpecifiedDaysAgo(date, 0).getTime();
+        long endTime = getStartTimeOfSpecifiedDaysAgo(date, -1).getTime();
+        return  DataSupport.where("date >= ? and < ?", String.valueOf(startTime), String.valueOf(endTime)).find(tClass);
+    }
+
+    public static <T> List<T> getRecord(Class<T> tClass, Date date, int days) {
+        return null;
+    }
 
     /**
      * @param uid               用户id

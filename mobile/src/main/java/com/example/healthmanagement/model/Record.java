@@ -16,5 +16,5 @@ public interface Record {
 
     String getName();
 
-    List<?> getItemList();
+//    List<?> getItemList();
 }

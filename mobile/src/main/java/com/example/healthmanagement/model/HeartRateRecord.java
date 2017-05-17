@@ -18,11 +18,11 @@ public class HeartRateRecord implements Record {
         return Record.HEART_RATE;
     }
 
-    @Override
-    public List<HeartRateItem> getItemList() {
-
-        return heartRateItemList;
-    }
+//    @Override
+//    public List<HeartRateItem> getItemList() {
+//
+//        return heartRateItemList;
+//    }
 
     @Override
     public boolean equals(Object obj) {

@@ -10,8 +10,9 @@ public class BloodSugarRecord implements Record {
 
     private List<BloodSugarItem> bloodSugarItemList;
 
-    public BloodSugarRecord(List<BloodSugarItem> bloodSugarItemList) {
-        this.bloodSugarItemList = bloodSugarItemList;
+    public BloodSugarRecord(List<BloodSugarItem> ItemList) {
+        this.bloodSugarItemList = ItemList;
+
     }
 
     @Override
@@ -19,10 +20,10 @@ public class BloodSugarRecord implements Record {
         return Record.BLOOD_SUGAR;
     }
 
-    @Override
-    public List<BloodSugarItem> getItemList() {
-        return bloodSugarItemList;
-    }
+//    @Override
+//    public List<BloodSugarItem> getItemList() {
+//        return bloodSugarItemList;
+//    }
 
     @Override
     public boolean equals(Object obj) {

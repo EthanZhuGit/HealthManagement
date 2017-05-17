@@ -41,4 +41,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/drag-sort-listview.jar')
     compile files('libs/scale-ruler.jar')
+    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
 }

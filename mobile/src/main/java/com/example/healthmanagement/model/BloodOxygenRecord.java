@@ -18,10 +18,10 @@ public class BloodOxygenRecord implements Record {
         return Record.BLOOD_OXYGEN;
     }
 
-    @Override
-    public List<BloodOxygenItem> getItemList() {
-        return bloodOxygenItemList;
-    }
+
+//    public List<BloodOxygenItem> getItemList() {
+//        return bloodOxygenItemList;
+//    }
 
     @Override
     public boolean equals(Object obj) {

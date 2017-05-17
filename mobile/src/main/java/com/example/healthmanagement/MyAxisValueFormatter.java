@@ -1,5 +1,7 @@
 package com.example.healthmanagement;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
@@ -12,14 +14,15 @@ import java.util.ArrayList;
  */
 
 public class MyAxisValueFormatter implements IAxisValueFormatter {
+    private static final String TAG = "TAG" + "MyAxisValueFormatter";
     private ArrayList<String> values;
-
     public MyAxisValueFormatter(ArrayList<String> values) {
         this.values = values;
     }
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
+        Log.d(TAG, "getFormattedValue: " + value+" "+(int)value);
         if ((int) value < values.size()) {
             String s = values.get((int) value);
             SimpleDateFormat output = new SimpleDateFormat("M/d");

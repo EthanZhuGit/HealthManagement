@@ -1,6 +1,7 @@
 package com.example.healthmanagement.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,7 +67,9 @@ public class CardListAdapter extends ArrayAdapter<Record> {
         return entryList;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    @Override
+    @NonNull
+    public View getView(final int position, View convertView, @NonNull  ViewGroup parent) {
         Record record = getItem(position);
         final String recordName = record.getName();
         View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
@@ -93,6 +96,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
         if (record != null) {
             switch (record.getName()) {
                 case "blood_pressure":
+                    Log.d(TAG, "getView: " + "bp");
                     BloodPressureRecord bloodPressureRecord = (BloodPressureRecord) record;
                     signName.setText(record.getName());
                     signImg.setImageResource(R.drawable.ic_blood_pressure);
@@ -101,76 +105,47 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                     ArrayList<Float> systolicPressure = new ArrayList<>();
                     ArrayList<Float> diastolicPressure = new ArrayList<>();
 
-                    /*
-                    Set<java.util.Date> keys=record.getBloodPressureDataMap().keySet();
-                    ArrayList<java.util.Date> d = new ArrayList<>();
-                    d.addAll(keys);
-                    Collections.sort(d, new Comparator<java.util.Date>() {
-                        @Override
-                        public int compare(java.util.Date o1, java.util.Date o2) {
-                            if (o1.after(o2)) {
-                                return 1;
-                            } else {
-                                return -1;
-                            }
-                        }
-                    });
-                    Log.d(TAG, "getView: " + Arrays.toString(d.toArray()));
 
-                    ArrayList<String> dateList=new ArrayList<>();
-                    ArrayList<Float> systolicPressure = new ArrayList<>();
-                    ArrayList<Float> diastolicPressure = new ArrayList<>();
 
-                    for (java.util.Date utilDate : d) {
-                        Log.d(TAG, "getView: "+utilDate.toString());
-                        BloodPressureItem item=record.getBloodPressureDataMap().get(utilDate);
-                        String dateString=new Date(utilDate.getTime()).toString();
-                        Log.d(TAG, "getView: "+dateList.indexOf(dateString));
-                        if (dateList.indexOf(dateString) == -1) {
-                            dateList.add(dateString);
-                            systolicPressure.add(item.getSystolicPpressure());
-                            diastolicPressure.add(item.getDiastolicPressure());
-                        } else {
-                            int index = dateList.indexOf(dateString);
-                            float oldSPNum = systolicPressure.get(index);
-                            float newSPNum = item.getSystolicPpressure();
-                            systolicPressure.set(index, (oldSPNum + newSPNum) / 2);
-                            float oldDPNum = diastolicPressure.get(index);
-                            float newDPNum = item.getDiastolicPressure();
-                            diastolicPressure.set(index, (oldDPNum + newDPNum) / 2);
-                        }
+//                    List<BloodPressureItem> bloodPressureItemList = bloodPressureRecord.getItemList();
+                    List<BloodPressureItem> bloodPressureItemList = bloodPressureRecord.getBloodPressureItemListForChart();
+
+
+//                    Collections.sort(bloodPressureItemList, new Comparator<BloodPressureItem>() {
+//                        @Override
+//                        public int compare(BloodPressureItem o1, BloodPressureItem o2) {
+//                            if (o1.getDate().after(o2.getDate())) {
+//                                return 1;
+//                            } else {
+//                                return -1;
+//                            }
+//                        }
+//                    });
+
+                    for (BloodPressureItem  b:
+                            bloodPressureItemList) {
+                        Log.d(TAG,"bp  "+bloodPressureItemList.size()+" "+ b.getDate()+" "+b.getSystolicPressure()+" "+b.getDiastolicPressure());
                     }
-                    */
-
-                    List<BloodPressureItem> bloodPressureItemList = bloodPressureRecord.getItemList();
-                    Collections.sort(bloodPressureItemList, new Comparator<BloodPressureItem>() {
-                        @Override
-                        public int compare(BloodPressureItem o1, BloodPressureItem o2) {
-                            if (o1.getDate().after(o2.getDate())) {
-                                return 1;
-                            } else {
-                                return -1;
-                            }
-                        }
-                    });
                     if (bloodPressureItemList.size()!=0){
                         for (BloodPressureItem item :
                                 bloodPressureItemList) {
                             String dateString = new Date(item.getDate().getTime()).toString();
-                            Log.d(TAG, "getView: " + dateList.indexOf(dateString));
-                            if (dateList.indexOf(dateString) == -1) {
-                                dateList.add(dateString);
-                                systolicPressure.add(item.getSystolicPressure());
-                                diastolicPressure.add(item.getDiastolicPressure());
-                            } else {
-                                int index = dateList.indexOf(dateString);
-                                float oldSPNum = systolicPressure.get(index);
-                                float newSPNum = item.getSystolicPressure();
-                                systolicPressure.set(index, (oldSPNum + newSPNum) / 2);
-                                float oldDPNum = diastolicPressure.get(index);
-                                float newDPNum = item.getDiastolicPressure();
-                                diastolicPressure.set(index, (oldDPNum + newDPNum) / 2);
-                            }
+//                            if (dateList.indexOf(dateString) == -1) {
+//                                dateList.add(dateString);
+//                                systolicPressure.add(item.getSystolicPressure());
+//                                diastolicPressure.add(item.getDiastolicPressure());
+//                            } else {
+//                                int index = dateList.indexOf(dateString);
+//                                float oldSPNum = systolicPressure.get(index);
+//                                float newSPNum = item.getSystolicPressure();
+//                                systolicPressure.set(index, (oldSPNum + newSPNum) / 2);
+//                                float oldDPNum = diastolicPressure.get(index);
+//                                float newDPNum = item.getDiastolicPressure();
+//                                diastolicPressure.set(index, (oldDPNum + newDPNum) / 2);
+//                            }
+                            dateList.add(dateString);
+                            systolicPressure.add(item.getSystolicPressure());
+                            diastolicPressure.add(item.getDiastolicPressure());
                         }
 
 

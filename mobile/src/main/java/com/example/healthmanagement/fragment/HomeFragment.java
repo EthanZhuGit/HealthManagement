@@ -134,7 +134,8 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
         user.setPhoneNum("18086742831");
         user.setAge(22);
         user.setSex("男");
-        user.save();
+//        user.save();
+        user.saveOrUpdate("phonenum=?", "18086742831");
 //        java.util.Date date = new java.util.Date();
 //        LocalDateBaseHelper.saveBloodPressureItem("18086742831", new java.util.Date(1494217984000L), 100.0f, 90.0f, new java.util.Date(1494217984000L));
 //        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494397812000L), 115.0f, 80.0f,new java.util.Date(1494397812000L));
@@ -214,6 +215,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
         }
         records.clear();
         records.addAll(r);
+
     }
 
     @Override

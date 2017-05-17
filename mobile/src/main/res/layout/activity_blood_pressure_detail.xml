@@ -7,13 +7,18 @@
     android:orientation="vertical"
     tools:context="com.example.healthmanagement.activity.BloodPressureDetailActivity">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart"
+    <!--<com.github.mikephil.charting.charts.LineChart-->
+        <!--android:id="@+id/line_chart"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1">-->
+
+    <!--</com.github.mikephil.charting.charts.LineChart>-->
+    <lecho.lib.hellocharts.view.LineChartView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </com.github.mikephil.charting.charts.LineChart>
+        android:layout_weight="1"
+        android:id="@+id/line_chart"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"

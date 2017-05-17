@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.healthmanagement.HelpUtils;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 import com.example.healthmanagement.fragment.HomeFragment;
@@ -68,7 +69,7 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
 
 
         } else {
-            dateDefault = new Date();
+            dateDefault = HelpUtils.getDateWithoutMillionSec(new Date());
             calendar = Calendar.getInstance();
             calendar.setTime(dateDefault);
             highPressure=HP;

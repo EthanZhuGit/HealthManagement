@@ -10,6 +10,8 @@ import com.example.healthmanagement.model.BloodSugarItem;
 import com.example.healthmanagement.model.IsCardShow;
 import com.example.healthmanagement.model.Record;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,17 +69,30 @@ public class HelpUtils {
         editor.apply();
     }
 
-    public static void LogArrayList(ArrayList<IsCardShow> list) {
-        for (IsCardShow i :
-                list) {
-            Log.d(TAG, "LogArrayList: " + i.getName()+" "+i.isShow()    );
-        }
-    }
-
     public static String getTimeWithoutSecInString(Date date) {
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
+    }
+
+    public static Date getDateWithoutMillionSec(Date date) {
+        Date output=null;
+        SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat out = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            output = out.parse(in.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (output == null) {
+            return null;
+        }
+        return output;
+    }
+
+    public static String getMonthDayInString(Date date) {
+        SimpleDateFormat in = new SimpleDateFormat("M/d");
+        return in.format(date);
     }
 
 }
