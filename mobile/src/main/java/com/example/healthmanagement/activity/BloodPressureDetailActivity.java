@@ -89,20 +89,8 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         initView();
         record = LocalDateBaseHelper.getAllBloodPressureData();
 
-//        bloodPressureItemList = record.getItemList();
         bloodPressureItemList = record.getBloodPressureItemListForChart();
 
-//         comparator= new Comparator<BloodPressureItem>() {
-//            @Override
-//            public int compare(BloodPressureItem o1, BloodPressureItem o2) {
-//                if (o1.getDate().after(o2.getDate())) {
-//                    return 1;
-//                } else {
-//                    return -1;
-//                }
-//            }
-//        };
-//        Collections.sort(bloodPressureItemList, comparator);
 
         initChartData();
         initLineChart();
@@ -114,94 +102,6 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
             }
         };
         lvDetail.setOnItemLongClickListener(onItemLongClickListener);
-
-
-//        dateList = new ArrayList<>();
-//        systolicPressure = new ArrayList<>();
-//        diastolicPressure = new ArrayList<>();
-//        if (bloodPressureItemList != null && bloodPressureItemList.size() != 0) {
-//            for (BloodPressureItem item :
-//                    bloodPressureItemList) {
-//                String dateString = new Date(item.getDate().getTime()).toString();
-//                Log.d(TAG, "getView: " + dateList.indexOf(dateString));
-//                if (dateList.indexOf(dateString) == -1) {
-//                    dateList.add(dateString);
-//                    systolicPressure.add(item.getSystolicPressure());
-//                    diastolicPressure.add(item.getDiastolicPressure());
-//                } else {
-//                    int index = dateList.indexOf(dateString);
-//                    float oldSPNum = systolicPressure.get(index);
-//                    float newSPNum = item.getSystolicPressure();
-//                    systolicPressure.set(index, (oldSPNum + newSPNum) / 2);
-//                    float oldDPNum = diastolicPressure.get(index);
-//                    float newDPNum = item.getDiastolicPressure();
-//                    diastolicPressure.set(index, (oldDPNum + newDPNum) / 2);
-//                }
-//                dateList.add(dateString);
-//                systolicPressure.add(item.getSystolicPressure());
-//                diastolicPressure.add(item.getDiastolicPressure());
-//            }
-//
-//            List<Entry> systolicPressureEntryList = convert(systolicPressure);
-//            List<Entry> diastolicPressureEntryList = convert(diastolicPressure);
-//
-//            LineDataSet systolicPressureDataSet = new LineDataSet(systolicPressureEntryList, "收缩压");
-//            systolicPressureDataSet.setCircleColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-//            systolicPressureDataSet.setDrawCircleHole(false);
-//            systolicPressureDataSet.setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-//            systolicPressureDataSet.setValueTextSize(10);
-//            systolicPressureDataSet.setDrawValues(true);
-//            systolicPressureDataSet.setValueFormatter(new MyDataSetValueFormatter());
-//            systolicPressureDataSet.setHighlightLineWidth(2);
-//
-//            LineDataSet diastolicPressureDataSet = new LineDataSet(diastolicPressureEntryList, "舒张压");
-//            diastolicPressureDataSet.setCircleColor(ContextCompat.getColor(this, R.color.colorAccent));
-//            diastolicPressureDataSet.setColor(ContextCompat.getColor(this, R.color.colorAccent));
-//            diastolicPressureDataSet.setDrawCircleHole(false);
-//            diastolicPressureDataSet.setValueTextSize(10);
-//            diastolicPressureDataSet.setDrawValues(true);
-//            diastolicPressureDataSet.setValueFormatter(new MyDataSetValueFormatter());
-//            diastolicPressureDataSet.setHighlightLineWidth(2);
-//
-//            List<ILineDataSet> lineDataSetList = new ArrayList<>();
-//            lineDataSetList.add(systolicPressureDataSet);
-//            lineDataSetList.add(diastolicPressureDataSet);
-//
-//            LineData lineData = new LineData(lineDataSetList);
-//            lineChart.setData(lineData);
-//            lineChart.getDescription().setEnabled(false);
-//            lineChart.getLegend().setEnabled(false);
-//            lineChart.setDragEnabled(true);
-//
-//
-//            lineChart.setVisibleXRangeMaximum(6);
-////            lineChart.setVisibleXRangeMinimum(6);
-//
-//            XAxis xAxis = lineChart.getXAxis();
-//            xAxis.setAxisLineWidth(2);
-//            xAxis.setValueFormatter(new MyAxisValueFormatter(dateList));
-//            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//            YAxis yAxis = lineChart.getAxisLeft();
-//            yAxis.setAxisLineWidth(2);
-//            YAxis yAxis1 = lineChart.getAxisRight();
-//            yAxis1.setEnabled(false);
-//
-//
-//            setDetailOfSpecifiedDay(dateList.size() - 1);
-//
-//
-//            lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-//                @Override
-//                public void onValueSelected(Entry e, Highlight h) {
-//                    int index = (int) e.getX();
-//                    setDetailOfSpecifiedDay(index);
-//                }
-//
-//                @Override
-//                public void onNothingSelected() {
-//                }
-//            });
-//        }
     }
 
     private void initView() {
@@ -224,22 +124,11 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         specifiedDayItems.clear();
         specifiedDayItems.addAll(result);
         detailAdapter.notifyDataSetChanged();
-//        txtDate.setText(dateList.get(index));
-//        txtHighBp.setText(String.valueOf(systolicPressure.get(index)));
-//        txtLowBp.setText(String.valueOf(diastolicPressure.get(index)));
         txtDate.setText(new Date(item.getDate().getTime()).toString());
         txtHighBp.setText(String.valueOf(item.getSystolicPressure()));
         txtLowBp.setText(String.valueOf(item.getDiastolicPressure()));
 
     }
-
-//    private List<Entry> convert(List<Float> l) {
-//        List<Entry> entryList = new ArrayList<>();
-//        for (int i = 0; i < l.size(); i++) {
-//            entryList.add(new Entry(i, l.get(i)));
-//        }
-//        return entryList;
-//    }
 
     private void initChartData() {
         if (bloodPressureItemList != null && bloodPressureItemList.size() != 0) {
@@ -405,15 +294,3 @@ class DetailAdapter extends ArrayAdapter<BloodPressureItem> {
     }
 }
 
-//class MyDataSetValueFormatter implements IValueFormatter {
-//    private DecimalFormat format;
-//
-//    public MyDataSetValueFormatter() {
-//        format = new DecimalFormat("###.#");
-//    }
-//
-//    @Override
-//    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-//        return format.format(value);
-//    }
-//}
