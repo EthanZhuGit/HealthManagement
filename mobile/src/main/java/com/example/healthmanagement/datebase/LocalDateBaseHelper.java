@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by zyx10 on 2017/5/13 0013.
@@ -45,46 +46,38 @@ public class LocalDateBaseHelper {
         return calendar1.getTime();
     }
 
-    public static BloodOxygenRecord getBloodOxygenRecord() {
-        return new BloodOxygenRecord(getRecord(BloodOxygenItem.class));
+    public static BloodOxygenRecord getBloodOxygenRecord(String user_id) {
+        return new BloodOxygenRecord(getRecord(user_id, BloodOxygenItem.class));
     }
-    public static BloodOxygenRecord getAllBloodOxygenRecord() {
-        return new BloodOxygenRecord(DataSupport.order("date asc").find(BloodOxygenItem.class));
-    }
-
-
-    public static BloodPressureRecord getBloodPressureRecord() {
-        List<BloodPressureItem> list = getRecord(BloodPressureItem.class);
-        for (BloodPressureItem i:
-             list) {
-            Log.d(TAG, "getBloodPressureRecord: " + i.getDate() + " " + i.getSystolicPressure() + " " + i.getDiastolicPressure());
-        }
-        return new BloodPressureRecord(getRecord(BloodPressureItem.class));
-    }
-    public static BloodPressureRecord getAllBloodPressureData() {
-//        return new BloodPressureRecord(DataSupport.findAll(BloodPressureItem.class));
-        List<BloodPressureItem> l = DataSupport.findAll(BloodPressureItem.class);
-        Log.d(TAG, "getAllBloodPressureData: " + l.size());
-        List<BloodPressureItem> list=DataSupport.order("date asc").find(BloodPressureItem.class);
-        Log.d(TAG, "getAllBloodPressureData: " + list.size());
-        return new BloodPressureRecord(DataSupport.order("date asc").find(BloodPressureItem.class));
+    public static BloodOxygenRecord getAllBloodOxygenRecord(String user_id) {
+        return new BloodOxygenRecord(DataSupport.where("user_id=?",user_id).order("date asc").find(BloodOxygenItem.class));
     }
 
 
-    public static BloodSugarRecord getBloodSugarRecord() {
-        return new BloodSugarRecord(getRecord(BloodSugarItem.class));
+    public static BloodPressureRecord getBloodPressureRecord(String user_id) {
+        Log.d(TAG, "getBloodPressureRecord: ");
+        return new BloodPressureRecord(getRecord(user_id, BloodPressureItem.class));
     }
-    public static BloodSugarRecord getAllBloodSugarData() {
+    public static BloodPressureRecord getAllBloodPressureData(String  user_id) {
+
+        return new BloodPressureRecord(DataSupport.where("user_id=?",user_id).order("date asc").find(BloodPressureItem.class));
+    }
+
+
+    public static BloodSugarRecord getBloodSugarRecord(String user_id) {
+        return new BloodSugarRecord(getRecord(user_id, BloodSugarItem.class));
+    }
+    public static BloodSugarRecord getAllBloodSugarData(String user_id) {
 //        return new BloodSugarRecord(DataSupport.findAll(BloodSugarItem.class));
-        return new BloodSugarRecord(DataSupport.order("date asc").find(BloodSugarItem.class));
+        return new BloodSugarRecord(DataSupport.where("user_id=?",user_id).order("date asc").find(BloodSugarItem.class));
     }
 
 
-    public static HeartRateRecord getHeartRateRecord() {
-        return new HeartRateRecord(getRecord(HeartRateItem.class));
+    public static HeartRateRecord getHeartRateRecord(String user_id) {
+        return new HeartRateRecord(getRecord(user_id, HeartRateItem.class));
     }
-    public static HeartRateRecord getAllHeartRateData() {
-        return new HeartRateRecord(DataSupport.order("date asc").find(HeartRateItem.class));
+    public static HeartRateRecord getAllHeartRateData(String user_id) {
+        return new HeartRateRecord(DataSupport.where("user_id=?",user_id).order("date asc").find(HeartRateItem.class));
     }
 
     /**
@@ -93,7 +86,7 @@ public class LocalDateBaseHelper {
      * @param <T>
      * @return
      */
-    private static <T> List<T> getRecord(Class<T> tClass) {
+    private static <T> List<T> getRecord(String user_id, Class<T> tClass) {
         List<T> list = new ArrayList<>();
         Date date = new Date();
         int daysWithRecord = 0;
@@ -101,12 +94,13 @@ public class LocalDateBaseHelper {
         long startDate;
         long endDate;
         int oldListSize;
-        int totalNum = DataSupport.count(tClass);
+        int totalNum = DataSupport.where("user_id=?",user_id).count(tClass);
+        Log.d(TAG, "getRecord: " + totalNum);
         while (daysWithRecord <= 6) {
             endDate=date.getTime();
             startDate = getStartTimeOfSpecifiedDaysAgo(queryDays).getTime();
             oldListSize = list.size();
-            list = DataSupport.where("date between ? and ?", String.valueOf(startDate), String.valueOf(endDate)).order("date asc").find(tClass);
+            list = DataSupport.where("date between ? and ? and user_id=?", String.valueOf(startDate), String.valueOf(endDate),user_id).order("date asc").find(tClass);
             if (list.size() > oldListSize) {
                 daysWithRecord++;
             }
@@ -144,7 +138,7 @@ public class LocalDateBaseHelper {
      * @param lastModifyDate    最后更新时间
      */
     public static void saveBloodPressureItem(String uid, Date date, float systolicPressure, float diastolicPressure, Date lastModifyDate) {
-        List<User> users = DataSupport.where("phonenum=?", uid).find(User.class);
+        List<User> users = DataSupport.where("id=?", uid).find(User.class);
         User user = users.get(0);
         List<BloodPressureItem> bloodPressureItemList = user.getBloodPressureItemList();
         BloodPressureItem bloodPressureItem = new BloodPressureItem();
@@ -154,16 +148,26 @@ public class LocalDateBaseHelper {
         bloodPressureItem.setLastModifyDate(lastModifyDate);
         bloodPressureItem.save();
         bloodPressureItemList.add(bloodPressureItem);
-        user.saveOrUpdate("phonenum=?", uid);
+        user.saveOrUpdate("id=?", uid);
     }
 
     public static void saveBloodPressureItem(String uid, BloodPressureItem item) {
-        List<User> users = DataSupport.where("phonenum=?", uid).find(User.class);
+        List<User> users = DataSupport.where("id=?", uid).find(User.class);
         User user = users.get(0);
         List<BloodPressureItem> bloodPressureItemList = user.getBloodPressureItemList();
+        Log.d(TAG, "saveBloodPressureItem: " + user.getUsername() + user.getObject_id() + " " + bloodPressureItemList.size());
         item.save();
         bloodPressureItemList.add(item);
-        user.saveOrUpdate("phonenum=?", uid);
+        if (user.saveOrUpdate("id=?", uid)) {
+            Log.d(TAG, "saveBloodPressureItem: " + "save suc");
+        }
+
     }
+
+//    public static  String getUserIdWithObjectId(String objectId) {
+//        List<User> users = DataSupport.where("object_id=?", objectId).find(User.class);
+//        User user = users.get(0);
+//        return String.valueOf(user.getId());
+//    }
 
 }

@@ -55,6 +55,7 @@ public class HelpUtils {
 //                new IsCardShow(Record.HEART_RATE, preferences.getBoolean(HEARTRATEKEY, true)));
 //        isCardShows.set(preferences.getInt(Record.BLOOD_OXYGEN, 4),
 //                new IsCardShow(Record.BLOOD_OXYGEN, preferences.getBoolean(BLOODOXYGENKEY, true)));
+        Log.d(TAG, "getCardShowControlList: ");
         return isCardShows;
     }
 
@@ -72,7 +73,7 @@ public class HelpUtils {
     public static String getTimeWithoutSecInString(Date date) {
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
-        return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE);
+        return calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     public static Date getDateWithoutMillionSec(Date date) {

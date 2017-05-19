@@ -13,12 +13,20 @@ import java.util.List;
 public class User extends DataSupport {
     public User() {
     }
-
-    String username;
     @Column(unique = true)
-    String phoneNum;
-    int age;
-    String sex;
+    private int id;
+
+    private String username;
+
+    @Column(unique = true)
+    private String phoneNum;
+
+
+    @Column(unique = true)
+    private String object_id;
+
+    private int age;
+    private String sex;
     private List<BloodPressureItem> bloodPressureItemList = new ArrayList<>();
     private List<BloodSugarItem> bloodSugarItemList = new ArrayList<>();
     private List<HeartRateItem> heartRateItemList = new ArrayList<>();
@@ -54,6 +62,22 @@ public class User extends DataSupport {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getObject_id() {
+        return object_id;
+    }
+
+    public void setObject_id(String object_id) {
+        this.object_id = object_id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<BloodPressureItem> getBloodPressureItemList() {

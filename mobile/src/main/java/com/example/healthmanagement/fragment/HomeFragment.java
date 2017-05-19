@@ -11,20 +11,16 @@ import android.widget.Button;
 
 import com.example.healthmanagement.HelpUtils;
 import com.example.healthmanagement.ListViewForScrollView;
+import com.example.healthmanagement.MyApplication;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.activity.BloodPressureDetailActivity;
 import com.example.healthmanagement.activity.BloodPressureRecordActivity;
 import com.example.healthmanagement.activity.CardShowControlActivity;
 import com.example.healthmanagement.adapter.CardListAdapter;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
-import com.example.healthmanagement.model.BloodOxygenRecord;
-import com.example.healthmanagement.model.BloodPressureItem;
-import com.example.healthmanagement.model.BloodPressureRecord;
 import com.example.healthmanagement.model.IsCardShow;
 import com.example.healthmanagement.model.Record;
 import com.example.healthmanagement.model.User;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +31,21 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     private static final String USER_CLOUD_ID = "user_cloud_id";
     public static final int REQUEST_CODE_CARDCONTROL = 100;
     public static final int RESULT_CODE_CARDCONTROL = 101;
-    public static final int REQUEST_CODE_RECORD_BLOODPRESSURE=102;
-    public static final int RESULT_CODE_RECORD_BLOODPRESSURE=103;
-    public static final int REQUEST_CODE_RECORD_BLOODSUGAR=104;
-    public static final int RESULT_CODE_RECORD_BLOODSUGAR=105;
-    public static final int REQUEST_CODE_RECORD_BLOODOXYGEN=106;
-    public static final int RESULT_CODE_RECORD_BLOODOXYGEN=107;
-    public static final int REQUEST_CODE_RECORD_HEARTRATE=108;
-    public static final int RESULT_CODE_RECORD_HEARTRATE=109;
-    public static final int REQUEST_CODE_RECORD_SREPCOUNT=110;
-    public static final int RESULT_CODE_RECORD_STEPCOUNT=111;
+    public static final int REQUEST_CODE_RECORD_FROM_HOME_TO_BPDA = 102;
+    public static final int REQUEST_CODE_RECORD_FROM_HOME_TO_BPRA = 103;
+    public static final int REQUEST_CODE_RECORD_BLOODSUGAR = 104;
+    public static final int RESULT_CODE_RECORD_BLOODSUGAR = 105;
+    public static final int REQUEST_CODE_RECORD_BLOODOXYGEN = 106;
+    public static final int RESULT_CODE_RECORD_BLOODOXYGEN = 107;
+    public static final int REQUEST_CODE_RECORD_HEARTRATE = 108;
+    public static final int RESULT_CODE_RECORD_HEARTRATE = 109;
+    public static final int REQUEST_CODE_RECORD_SREPCOUNT = 110;
+    public static final int RESULT_CODE_RECORD_STEPCOUNT = 111;
 
     private ListViewForScrollView cardListView;
     private Button btnCardShowControl;
     private CardListAdapter cardListAdapter;
-    private String userCloudId;
+    private String user_id;
     private Record record;
     private List<Record> records = new ArrayList<>();
 
@@ -71,8 +67,10 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userCloudId = getArguments().getString(USER_CLOUD_ID);
-            Log.d(TAG, "onCreate: " + userCloudId);
+            user_id = getArguments().getString(USER_CLOUD_ID);
+            Log.d(TAG, "onCreate: " + user_id);
+            MyApplication myApplication = (MyApplication) getContext().getApplicationContext();
+            myApplication.setUid(user_id);
         }
 
 
@@ -92,18 +90,31 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                 Log.d(TAG, "onActivityResult: " + records.size());
                 cardListAdapter.notifyDataSetChanged();
                 break;
-            case REQUEST_CODE_RECORD_BLOODPRESSURE:
-                if (data!=null) {
-                    bundle = data.getExtras();
-                    BloodPressureItem item = bundle.getParcelable("bp_return");
-                    LocalDateBaseHelper.saveBloodPressureItem("18086742831", item);
-                    Record record = LocalDateBaseHelper.getBloodPressureRecord();
+            case REQUEST_CODE_RECORD_FROM_HOME_TO_BPDA:
+                if (resultCode == BloodPressureDetailActivity.RESULT_CODE_CHANGE_BPDA) {
+                    Log.d(TAG, "onActivityResult: " + "data change from bpda");
+//                    bundle = data.getExtras();
+//                    BloodPressureItem item = bundle.getParcelable("bp_return");
+//                    LocalDateBaseHelper.saveBloodPressureItem("18086742831", item);
+                    Record record = LocalDateBaseHelper.getBloodPressureRecord(user_id);
+                    if (records.contains(record)) {
+                        records.set(records.indexOf(record), record);
+                    }
+                    cardListAdapter.notifyDataSetChanged();
+                } else {
+                    Log.d(TAG, "onActivityResult: " + "date no change from bpda "+resultCode);
+                }
+                break;
+            case REQUEST_CODE_RECORD_FROM_HOME_TO_BPRA:
+                if (resultCode == BloodPressureRecordActivity.RESULT_CODE_CHANGE_BPRA) {
+                    Log.d(TAG, "onActivityResult: " + "data change from bpra");
+                    Record record = LocalDateBaseHelper.getBloodPressureRecord(user_id);
                     if (records.contains(record)) {
                         records.set(records.indexOf(record), record);
                     }
                     cardListAdapter.notifyDataSetChanged();
                 }
-                break;
+
 
         }
     }
@@ -112,6 +123,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         cardListView = (ListViewForScrollView) view.findViewById(R.id.card_list);
 
@@ -129,13 +141,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
 
             }
         });
-        User user = new User();
-        user.setUsername("朱一新");
-        user.setPhoneNum("18086742831");
-        user.setAge(22);
-        user.setSex("男");
-//        user.save();
-        user.saveOrUpdate("phonenum=?", "18086742831");
+
 //        java.util.Date date = new java.util.Date();
 //        LocalDateBaseHelper.saveBloodPressureItem("18086742831", new java.util.Date(1494217984000L), 100.0f, 90.0f, new java.util.Date(1494217984000L));
 //        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494397812000L), 115.0f, 80.0f,new java.util.Date(1494397812000L));
@@ -169,14 +175,14 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     }
 
     @Override
-    public void onCardClick(View v,String name) {
+    public void onCardClick(View v, String name) {
         Log.d(TAG, "onCardClick: ");
         switch (v.getId()) {
             case R.id.layout_include_scatter:
                 switch (name) {
                     case Record.BLOOD_PRESSURE:
                         Intent intent = new Intent(getContext(), BloodPressureDetailActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_RECORD_FROM_HOME_TO_BPDA);
                 }
 
                 break;
@@ -184,7 +190,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                 switch (name) {
                     case Record.BLOOD_PRESSURE:
                         Intent intent = new Intent(getContext(), BloodPressureRecordActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE_RECORD_BLOODPRESSURE);
+                        startActivityForResult(intent, REQUEST_CODE_RECORD_FROM_HOME_TO_BPRA);
                         break;
                 }
                 break;
@@ -193,22 +199,25 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     }
 
     private void setRecordList() {
-        List<Record> r=new ArrayList<>();
+        Log.d(TAG, "setRecordList: ");
+        List<Record> r = new ArrayList<>();
         for (IsCardShow i :
                 cardShowControlArrayList) {
             if (i.isShow()) {
                 switch (i.getName()) {
                     case Record.BLOOD_OXYGEN:
-                        r.add(LocalDateBaseHelper.getBloodOxygenRecord());
+                        r.add(LocalDateBaseHelper.getBloodOxygenRecord(user_id));
                         break;
                     case Record.BLOOD_PRESSURE:
-                        r.add(LocalDateBaseHelper.getBloodPressureRecord());
+                        r.add(LocalDateBaseHelper.getBloodPressureRecord(user_id));
                         break;
                     case Record.BLOOD_SUGAR:
-                        r.add(LocalDateBaseHelper.getBloodSugarRecord());
+                        r.add(LocalDateBaseHelper.getBloodSugarRecord(user_id));
                         break;
                     case Record.HEART_RATE:
-                        r.add(LocalDateBaseHelper.getHeartRateRecord());
+                        r.add(LocalDateBaseHelper.getHeartRateRecord(user_id));
+                        break;
+                    default:
                         break;
                 }
             }

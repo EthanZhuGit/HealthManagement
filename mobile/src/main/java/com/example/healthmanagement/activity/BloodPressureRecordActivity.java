@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.healthmanagement.HelpUtils;
+import com.example.healthmanagement.MyApplication;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 import com.example.healthmanagement.fragment.HomeFragment;
@@ -39,11 +41,12 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
     private float maxLP = 200.0f;
     private float minLP = 0.0f;
 
+    public static final int RESULT_CODE_CHANGE_BPRA=1;
+    public static final int RESULT_CODE_NO_CHANGE_BPRA=0;
+
 
     private Button setDateBtn;
     private Button setTimeBtn;
-    private Button confirmBtn;
-    private Button cancelBtn;
     private DecimalScaleRulerView highPressureChoose;
     private DecimalScaleRulerView lowPressureChoose;
     private TextView highPressureNum;
@@ -57,11 +60,13 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
     private float highPressure;
     private float lowPressure;
 
+    private MyApplication myApplication;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blood_pressure_record);
-
+        myApplication = (MyApplication) getApplicationContext();
         initView();
 
         Bundle bundle = getIntent().getExtras();
@@ -78,8 +83,6 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
         showTimeInButton(dateDefault);
         setDateBtn.setOnClickListener(this);
         setTimeBtn.setOnClickListener(this);
-        confirmBtn.setOnClickListener(this);
-        cancelBtn.setOnClickListener(this);
         highPressureChoose.setValueChangeListener(new DecimalScaleRulerView.OnValueChangeListener() {
             @Override
             public void onValueChange(float v) {
@@ -96,14 +99,27 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
                 lowPressure = Float.valueOf(s);
             }
         });
+
+        FloatingActionButton floatingActionButton= (FloatingActionButton) findViewById(R.id.fab_confirm);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bloodPressureItem = new BloodPressureItem();
+                bloodPressureItem.setDate(dateDefault);
+                bloodPressureItem.setSystolicPressure(highPressure);
+                bloodPressureItem.setDiastolicPressure(lowPressure);
+                bloodPressureItem.setLastModifyDate(dateDefault);
+                LocalDateBaseHelper.saveBloodPressureItem(myApplication.getUid(), bloodPressureItem);
+                setResult(RESULT_CODE_CHANGE_BPRA);
+                finish();
+            }
+        });
     }
 
 
     private void initView() {
         setDateBtn = (Button) findViewById(R.id.btn_set_date);
         setTimeBtn = (Button) findViewById(R.id.btn_set_time);
-        cancelBtn = (Button) findViewById(R.id.btn_cancel);
-        confirmBtn = (Button) findViewById(R.id.btn_confirm);
         highPressureChoose = (DecimalScaleRulerView) findViewById(R.id.high);
         lowPressureChoose = (DecimalScaleRulerView) findViewById(R.id.low);
         highPressureNum = (TextView) findViewById(R.id.txt_high_num);
@@ -127,40 +143,20 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
             case R.id.btn_set_time:
                 showTimePicker();
                 break;
-            case R.id.btn_confirm:
-                bloodPressureItem = new BloodPressureItem();
-                bloodPressureItem.setDate(dateDefault);
-                bloodPressureItem.setSystolicPressure(highPressure);
-                bloodPressureItem.setDiastolicPressure(lowPressure);
-                bloodPressureItem.setLastModifyDate(dateDefault);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("bp_return", bloodPressureItem);
-                Intent intent = new Intent();
-                intent.putExtras(bundle);
-                setResult(HomeFragment.RESULT_CODE_RECORD_BLOODPRESSURE, intent);
-                finish();
-                break;
-            case R.id.btn_cancel:
-                if (bloodPressureItem != null) {
-
-                }else {
-
-                    finish();
-                }
-                break;
         }
-
     }
 
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("放弃数据？");
-        builder.setMessage("点击“确认”才能保存数据");
+        builder.setMessage("界面将关闭且数据不会被存储");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                setResult(RESULT_CODE_NO_CHANGE_BPRA);
                 finish();
+
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

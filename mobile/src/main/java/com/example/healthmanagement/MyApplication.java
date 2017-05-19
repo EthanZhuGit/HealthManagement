@@ -13,6 +13,17 @@ import org.litepal.LitePal;
  */
 
 public class MyApplication extends Application {
+
+    private String user_id;
+
+    public String getUid() {
+        return user_id;
+    }
+
+    public void setUid(String uid) {
+        this.user_id = uid;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

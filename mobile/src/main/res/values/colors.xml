@@ -7,4 +7,8 @@
     <color name="two">#FF7F00</color>
     <color name="three">#FF0000</color>
     <color name="low">#9BCD9B</color>
+    <color name="background">#fffffafa</color>
+    <color name="ripple">#F06292</color>
+    <color name="accent_pressed">#C2185B</color>
+
 </resources>

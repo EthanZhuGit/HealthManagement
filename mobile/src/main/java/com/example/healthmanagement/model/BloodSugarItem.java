@@ -24,6 +24,7 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
     private float beforeSupper;
     private float afterSupper;
     private float beforeSleep;
+    private float beforeDawn;
     private Date lastModifyDate;
 
     public Date getDate() {
@@ -38,28 +39,64 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         return beforeBreakfast;
     }
 
+    public void setBeforeBreakfast(float beforeBreakfast) {
+        this.beforeBreakfast = beforeBreakfast;
+    }
+
     public float getAfterBreakfast() {
         return afterBreakfast;
+    }
+
+    public void setAfterBreakfast(float afterBreakfast) {
+        this.afterBreakfast = afterBreakfast;
     }
 
     public float getBeforeLunch() {
         return beforeLunch;
     }
 
+    public void setBeforeLunch(float beforeLunch) {
+        this.beforeLunch = beforeLunch;
+    }
+
     public float getAfterLunch() {
         return afterLunch;
+    }
+
+    public void setAfterLunch(float afterLunch) {
+        this.afterLunch = afterLunch;
     }
 
     public float getBeforeSupper() {
         return beforeSupper;
     }
 
+    public void setBeforeSupper(float beforeSupper) {
+        this.beforeSupper = beforeSupper;
+    }
+
     public float getAfterSupper() {
         return afterSupper;
     }
 
+    public void setAfterSupper(float afterSupper) {
+        this.afterSupper = afterSupper;
+    }
+
     public float getBeforeSleep() {
         return beforeSleep;
+    }
+
+    public void setBeforeSleep(float beforeSleep) {
+        this.beforeSleep = beforeSleep;
+    }
+
+    public float getBeforeDawn() {
+        return beforeDawn;
+    }
+
+    public void setBeforeDawn(float beforeDawn) {
+        this.beforeDawn = beforeDawn;
     }
 
     public Date getLastModifyDate() {
@@ -86,6 +123,7 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         dest.writeFloat(this.beforeSupper);
         dest.writeFloat(this.afterSupper);
         dest.writeFloat(this.beforeSleep);
+        dest.writeFloat(this.beforeDawn);
         dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
     }
 
@@ -102,6 +140,7 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         this.beforeSupper = in.readFloat();
         this.afterSupper = in.readFloat();
         this.beforeSleep = in.readFloat();
+        this.beforeDawn = in.readFloat();
         long tmpLastModifyDate = in.readLong();
         this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
     }

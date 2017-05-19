@@ -93,7 +93,6 @@ public class CardListAdapter extends ArrayAdapter<Record> {
             }
         });
 
-        if (record != null) {
             switch (record.getName()) {
                 case "blood_pressure":
                     Log.d(TAG, "getView: " + "bp");
@@ -203,7 +202,6 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                     signName.setText(record.getName());
                     break;
             }
-        }
         return view;
     }
 }

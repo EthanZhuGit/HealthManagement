@@ -18,10 +18,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/App">
         <activity
-            android:name=".activity.MainActivity"
-            android:theme="@style/App">
+            android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,10 +37,11 @@
             android:name=".activity.BloodPressureDetailActivity"
             android:label="血压" />
 
-        <activity android:name=".activity.BloodSugarDetailActivity" />
-        <activity android:name=".activity.BloodSugarRecordActivity">
+        <activity android:name=".activity.BloodSugarDetailActivity"
+            android:label="血糖"/>
+        <activity android:name=".activity.BloodSugarRecordActivity"
+            android:label="记录血糖"/>
 
-        </activity>
     </application>
 
 </manifest>
