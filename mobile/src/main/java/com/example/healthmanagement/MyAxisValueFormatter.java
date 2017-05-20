@@ -22,7 +22,6 @@ public class MyAxisValueFormatter implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        Log.d(TAG, "getFormattedValue: " + value+" "+(int)value);
         if ((int) value < values.size()) {
             String s = values.get((int) value);
             SimpleDateFormat output = new SimpleDateFormat("M/d");

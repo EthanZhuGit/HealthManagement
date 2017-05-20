@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.healthmanagement.HelpUtils;
-import com.example.healthmanagement.ListViewForScrollView;
+import com.example.healthmanagement.customview.ListViewForScrollView;
 import com.example.healthmanagement.MyApplication;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.activity.BloodPressureDetailActivity;
 import com.example.healthmanagement.activity.BloodPressureRecordActivity;
+import com.example.healthmanagement.activity.BloodSugarDetailActivity;
+import com.example.healthmanagement.activity.BloodSugarRecordActivity;
 import com.example.healthmanagement.activity.CardShowControlActivity;
 import com.example.healthmanagement.adapter.CardListAdapter;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 import com.example.healthmanagement.model.IsCardShow;
 import com.example.healthmanagement.model.Record;
-import com.example.healthmanagement.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +32,10 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     private static final String USER_CLOUD_ID = "user_cloud_id";
     public static final int REQUEST_CODE_CARDCONTROL = 100;
     public static final int RESULT_CODE_CARDCONTROL = 101;
-    public static final int REQUEST_CODE_RECORD_FROM_HOME_TO_BPDA = 102;
-    public static final int REQUEST_CODE_RECORD_FROM_HOME_TO_BPRA = 103;
-    public static final int REQUEST_CODE_RECORD_BLOODSUGAR = 104;
-    public static final int RESULT_CODE_RECORD_BLOODSUGAR = 105;
-    public static final int REQUEST_CODE_RECORD_BLOODOXYGEN = 106;
-    public static final int RESULT_CODE_RECORD_BLOODOXYGEN = 107;
-    public static final int REQUEST_CODE_RECORD_HEARTRATE = 108;
-    public static final int RESULT_CODE_RECORD_HEARTRATE = 109;
-    public static final int REQUEST_CODE_RECORD_SREPCOUNT = 110;
-    public static final int RESULT_CODE_RECORD_STEPCOUNT = 111;
+    public static final int REQUEST_CODE_RECORD_HOME_TO_BPDA = 102;
+    public static final int REQUEST_CODE_RECORD_HOME_TO_BPRA = 103;
+    public static final int REQUEST_CODE_RECORD_HOME_TO_BSDA = 104;
+    public static final int REQUEST_CODE_RECORD_HOME_TO_BSRA = 105;
 
     private ListViewForScrollView cardListView;
     private Button btnCardShowControl;
@@ -90,7 +85,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                 Log.d(TAG, "onActivityResult: " + records.size());
                 cardListAdapter.notifyDataSetChanged();
                 break;
-            case REQUEST_CODE_RECORD_FROM_HOME_TO_BPDA:
+            case REQUEST_CODE_RECORD_HOME_TO_BPDA:
                 if (resultCode == BloodPressureDetailActivity.RESULT_CODE_CHANGE_BPDA) {
                     Log.d(TAG, "onActivityResult: " + "data change from bpda");
 //                    bundle = data.getExtras();
@@ -102,10 +97,10 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                     }
                     cardListAdapter.notifyDataSetChanged();
                 } else {
-                    Log.d(TAG, "onActivityResult: " + "date no change from bpda "+resultCode);
+                    Log.d(TAG, "onActivityResult: " + "date no change from bpda " + resultCode);
                 }
                 break;
-            case REQUEST_CODE_RECORD_FROM_HOME_TO_BPRA:
+            case REQUEST_CODE_RECORD_HOME_TO_BPRA:
                 if (resultCode == BloodPressureRecordActivity.RESULT_CODE_CHANGE_BPRA) {
                     Log.d(TAG, "onActivityResult: " + "data change from bpra");
                     Record record = LocalDateBaseHelper.getBloodPressureRecord(user_id);
@@ -114,7 +109,26 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                     }
                     cardListAdapter.notifyDataSetChanged();
                 }
-
+                break;
+            case REQUEST_CODE_RECORD_HOME_TO_BSDA:
+                if (resultCode == BloodSugarDetailActivity.RESULT_CODE_CHANGE_BSDA) {
+                    Log.d(TAG, "onActivityResult: " + "data change form bsda");
+                    Record record = LocalDateBaseHelper.getBloodSugarRecord(user_id);
+                    if (records.contains(record)) {
+                        records.set(records.indexOf(record), record);
+                    }
+                    cardListAdapter.notifyDataSetChanged();
+                }
+                break;
+            case REQUEST_CODE_RECORD_HOME_TO_BSRA:
+                if (resultCode == BloodSugarRecordActivity.RESULT_CODE_CHANGE_BSRA) {
+                    Log.d(TAG, "onActivityResult: " + "data change from bsra");
+                    Record record = LocalDateBaseHelper.getBloodSugarRecord(user_id);
+                    if (records.contains(record)) {
+                        records.set(records.indexOf(record), record);
+                    }
+                    cardListAdapter.notifyDataSetChanged();
+                }
 
         }
     }
@@ -179,18 +193,28 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
         Log.d(TAG, "onCardClick: ");
         switch (v.getId()) {
             case R.id.layout_include_scatter:
+                Intent intent;
                 switch (name) {
                     case Record.BLOOD_PRESSURE:
-                        Intent intent = new Intent(getContext(), BloodPressureDetailActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE_RECORD_FROM_HOME_TO_BPDA);
+                        intent = new Intent(getContext(), BloodPressureDetailActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_RECORD_HOME_TO_BPDA);
+                        break;
+                    case Record.BLOOD_SUGAR:
+                        intent = new Intent(getContext(), BloodSugarDetailActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_RECORD_HOME_TO_BSDA);
+                        break;
                 }
-
                 break;
             case R.id.btn_record:
+                Intent intent1;
                 switch (name) {
                     case Record.BLOOD_PRESSURE:
-                        Intent intent = new Intent(getContext(), BloodPressureRecordActivity.class);
-                        startActivityForResult(intent, REQUEST_CODE_RECORD_FROM_HOME_TO_BPRA);
+                        intent1 = new Intent(getContext(), BloodPressureRecordActivity.class);
+                        startActivityForResult(intent1, REQUEST_CODE_RECORD_HOME_TO_BPRA);
+                        break;
+                    case Record.BLOOD_SUGAR:
+                        intent1 = new Intent(getContext(), BloodSugarRecordActivity.class);
+                        startActivityForResult(intent1, REQUEST_CODE_RECORD_HOME_TO_BSRA);
                         break;
                 }
                 break;

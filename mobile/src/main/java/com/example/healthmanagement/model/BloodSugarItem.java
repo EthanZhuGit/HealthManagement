@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/10 0010.
  */
 
-public class BloodSugarItem extends DataSupport implements Parcelable {
+public class BloodSugarItem extends DataSupport  {
 
     @Column(unique = true)
     private Date date;
@@ -26,6 +26,7 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
     private float beforeSleep;
     private float beforeDawn;
     private Date lastModifyDate;
+    private User user;
 
     public Date getDate() {
         return date;
@@ -107,53 +108,11 @@ public class BloodSugarItem extends DataSupport implements Parcelable {
         this.lastModifyDate = lastModifyDate;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public User getUser() {
+        return user;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.date != null ? this.date.getTime() : -1);
-        dest.writeFloat(this.beforeBreakfast);
-        dest.writeFloat(this.afterBreakfast);
-        dest.writeFloat(this.beforeLunch);
-        dest.writeFloat(this.afterLunch);
-        dest.writeFloat(this.beforeSupper);
-        dest.writeFloat(this.afterSupper);
-        dest.writeFloat(this.beforeSleep);
-        dest.writeFloat(this.beforeDawn);
-        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
+    public void setUser(User user) {
+        this.user = user;
     }
-
-    public BloodSugarItem() {
-    }
-
-    protected BloodSugarItem(Parcel in) {
-        long tmpDate = in.readLong();
-        this.date = tmpDate == -1 ? null : new Date(tmpDate);
-        this.beforeBreakfast = in.readFloat();
-        this.afterBreakfast = in.readFloat();
-        this.beforeLunch = in.readFloat();
-        this.afterLunch = in.readFloat();
-        this.beforeSupper = in.readFloat();
-        this.afterSupper = in.readFloat();
-        this.beforeSleep = in.readFloat();
-        this.beforeDawn = in.readFloat();
-        long tmpLastModifyDate = in.readLong();
-        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
-    }
-
-    public static final Creator<BloodSugarItem> CREATOR = new Creator<BloodSugarItem>() {
-        @Override
-        public BloodSugarItem createFromParcel(Parcel source) {
-            return new BloodSugarItem(source);
-        }
-
-        @Override
-        public BloodSugarItem[] newArray(int size) {
-            return new BloodSugarItem[size];
-        }
-    };
 }

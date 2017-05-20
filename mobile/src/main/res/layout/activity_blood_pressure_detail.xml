@@ -113,13 +113,13 @@
                         android:text="舒张压" />
                 </LinearLayout>
 
-                <com.example.healthmanagement.ListViewForScrollView
+                <com.example.healthmanagement.customview.ListViewForScrollView
                     android:id="@+id/lv_one_day_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/linearLayout2">
 
-                </com.example.healthmanagement.ListViewForScrollView>
+                </com.example.healthmanagement.customview.ListViewForScrollView>
 
 
 

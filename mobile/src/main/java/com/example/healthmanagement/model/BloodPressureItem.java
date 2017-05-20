@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/10 0010.
  */
 
-public class BloodPressureItem extends DataSupport implements Parcelable {
+public class BloodPressureItem extends DataSupport {
 
 
     @Column(unique = true)
@@ -20,10 +20,7 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
     private float systolicPressure;
     private float diastolicPressure;
     private Date lastModifyDate;
-
-    public BloodPressureItem() {
-
-    }
+    private User user;
 
     public Date getDate() {
         return date;
@@ -59,38 +56,11 @@ public class BloodPressureItem extends DataSupport implements Parcelable {
         this.lastModifyDate = lastModifyDate;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public User getUser() {
+        return user;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.date != null ? this.date.getTime() : -1);
-        dest.writeFloat(this.systolicPressure);
-        dest.writeFloat(this.diastolicPressure);
-        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
+    public void setUser(User user) {
+        this.user = user;
     }
-
-    protected BloodPressureItem(Parcel in) {
-        long tmpDate = in.readLong();
-        this.date = tmpDate == -1 ? null : new Date(tmpDate);
-        this.systolicPressure = in.readFloat();
-        this.diastolicPressure = in.readFloat();
-        long tmpLastModifyDate = in.readLong();
-        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
-    }
-
-    public static final Creator<BloodPressureItem> CREATOR = new Creator<BloodPressureItem>() {
-        @Override
-        public BloodPressureItem createFromParcel(Parcel source) {
-            return new BloodPressureItem(source);
-        }
-
-        @Override
-        public BloodPressureItem[] newArray(int size) {
-            return new BloodPressureItem[size];
-        }
-    };
 }

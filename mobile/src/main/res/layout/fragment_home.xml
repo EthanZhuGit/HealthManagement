@@ -8,12 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.example.healthmanagement.ListViewForScrollView
+        <com.example.healthmanagement.customview.ListViewForScrollView
             android:id="@+id/card_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null">
-        </com.example.healthmanagement.ListViewForScrollView>
+        </com.example.healthmanagement.customview.ListViewForScrollView>
         <Button
             android:id="@+id/btn_card_show_control"
             android:layout_width="wrap_content"

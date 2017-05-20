@@ -154,12 +154,18 @@ public class LocalDateBaseHelper {
     public static void saveBloodPressureItem(String uid, BloodPressureItem item) {
         List<User> users = DataSupport.where("id=?", uid).find(User.class);
         User user = users.get(0);
-        List<BloodPressureItem> bloodPressureItemList = user.getBloodPressureItemList();
-        Log.d(TAG, "saveBloodPressureItem: " + user.getUsername() + user.getObject_id() + " " + bloodPressureItemList.size());
-        item.save();
-        bloodPressureItemList.add(item);
-        if (user.saveOrUpdate("id=?", uid)) {
-            Log.d(TAG, "saveBloodPressureItem: " + "save suc");
+        Log.d(TAG, "saveBloodPressureItem: " + user.getUsername() + user.getObject_id() + " ");
+
+//        user.getBloodPressureItemList().add(item);
+//        if (user.saveOrUpdate("id=?", uid)) {
+//            Log.d(TAG, "saveBloodPressureItem: " + "save suc");
+//        }
+//        user.save();
+        item.setUser(user);
+        if (item.save()) {
+            Log.d(TAG, "saveBloodPressureItem: " + "suc");
+        } else {
+            Log.d(TAG, "saveBloodPressureItem: " + "fail");
         }
 
     }

@@ -15,6 +15,8 @@ import com.example.healthmanagement.R;
 import com.example.healthmanagement.model.User;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,15 +46,18 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+        if (!DataSupport.isExist(User.class, "id=?", "1")) {
+            User user = new User();
+            user.setUsername("朱一新");
+            user.setPhoneNum("18086742831");
+            user.setAge(22);
+            user.setSex("男");
+            user.setObject_id("18086742831");
+            user.save();
+            Log.d(TAG, "onCreate: " + " user save");
+        }
 
-        User user = new User();
-        user.setUsername("朱一新");
-        user.setPhoneNum("18086742831");
-        user.setAge(22);
-        user.setSex("男");
-        user.setObject_id("18086742831");
-//        user.save();
-        user.saveOrUpdate("id = ?", user_id);
+
 
 
 
@@ -94,5 +99,11 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             return fragmentList.size();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
     }
 }

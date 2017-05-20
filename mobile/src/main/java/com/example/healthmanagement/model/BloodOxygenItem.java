@@ -12,12 +12,14 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/15 0015.
  */
 
-public class BloodOxygenItem extends DataSupport implements Parcelable {
+public class BloodOxygenItem extends DataSupport{
 
     @Column(unique = false)
     private Date date;
     private float number;
     private Date lastModifyDate;
+
+    private User user;
 
     public Date getDate() {
         return date;
@@ -43,39 +45,12 @@ public class BloodOxygenItem extends DataSupport implements Parcelable {
         this.lastModifyDate = lastModifyDate;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public User getUser() {
+        return user;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.date != null ? this.date.getTime() : -1);
-        dest.writeFloat(this.number);
-        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public BloodOxygenItem() {
-    }
-
-    protected BloodOxygenItem(Parcel in) {
-        long tmpDate = in.readLong();
-        this.date = tmpDate == -1 ? null : new Date(tmpDate);
-        this.number = in.readFloat();
-        long tmpLastModifyDate = in.readLong();
-        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
-    }
-
-    public static final Creator<BloodOxygenItem> CREATOR = new Creator<BloodOxygenItem>() {
-        @Override
-        public BloodOxygenItem createFromParcel(Parcel source) {
-            return new BloodOxygenItem(source);
-        }
-
-        @Override
-        public BloodOxygenItem[] newArray(int size) {
-            return new BloodOxygenItem[size];
-        }
-    };
 }

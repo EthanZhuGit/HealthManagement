@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/img_card_icon"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:id="@+id/txt_latest_data_detail"
@@ -57,7 +57,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="4"
                         android:paddingStart="10dp"
-                        android:textSize="20sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/txt_last_record_date"
@@ -69,10 +69,8 @@
                 <com.github.mikephil.charting.charts.ScatterChart
                     android:id="@+id/scatter_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_below="@id/linear_layout"
-                    android:layout_margin="10dp"
-                    android:layout_marginTop="10dp" />
+                    android:layout_height="160dp"
+                    android:layout_below="@id/linear_layout" />
             </RelativeLayout>
 
             <Button

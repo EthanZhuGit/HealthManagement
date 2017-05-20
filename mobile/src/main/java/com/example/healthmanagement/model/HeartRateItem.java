@@ -12,12 +12,13 @@ import java.util.Date;
  * Created by zyx10 on 2017/5/15 0015.
  */
 
-public class HeartRateItem extends DataSupport implements Parcelable {
+public class HeartRateItem extends DataSupport  {
 
     @Column(unique = true)
     private Date date;
     private int rate;
     private Date lastModifyDate;
+    private User user;
 
 
     public Date getDate() {
@@ -44,39 +45,11 @@ public class HeartRateItem extends DataSupport implements Parcelable {
         this.lastModifyDate = lastModifyDate;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public User getUser() {
+        return user;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.date != null ? this.date.getTime() : -1);
-        dest.writeInt(this.rate);
-        dest.writeLong(this.lastModifyDate != null ? this.lastModifyDate.getTime() : -1);
+    public void setUser(User user) {
+        this.user = user;
     }
-
-    public HeartRateItem() {
-    }
-
-    protected HeartRateItem(Parcel in) {
-        long tmpDate = in.readLong();
-        this.date = tmpDate == -1 ? null : new Date(tmpDate);
-        this.rate = in.readInt();
-        long tmpLastModifyDate = in.readLong();
-        this.lastModifyDate = tmpLastModifyDate == -1 ? null : new Date(tmpLastModifyDate);
-    }
-
-    public static final Creator<HeartRateItem> CREATOR = new Creator<HeartRateItem>() {
-        @Override
-        public HeartRateItem createFromParcel(Parcel source) {
-            return new HeartRateItem(source);
-        }
-
-        @Override
-        public HeartRateItem[] newArray(int size) {
-            return new HeartRateItem[size];
-        }
-    };
 }

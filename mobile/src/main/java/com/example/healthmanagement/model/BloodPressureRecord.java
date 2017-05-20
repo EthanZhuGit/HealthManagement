@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -79,8 +80,10 @@ public class BloodPressureRecord implements Record {
             }
             BloodPressureItem item = new BloodPressureItem();
             item.setDate(key);
-            item.setDiastolicPressure(low / list.size());
-            item.setSystolicPressure(high / list.size());
+            float lowAvg = Float.valueOf(new DecimalFormat("###.#").format(low/list.size()));
+            float hignAvg=Float.valueOf(new DecimalFormat("###.#").format(high/list.size()));
+            item.setDiastolicPressure(lowAvg);
+            item.setSystolicPressure(hignAvg);
             bloodPressureItemListForChart.add(item);
         }
         Collections.sort(bloodPressureItemListForChart, new Comparator<BloodPressureItem>() {

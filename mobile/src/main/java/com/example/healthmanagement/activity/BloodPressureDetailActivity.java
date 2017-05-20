@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.healthmanagement.HelpUtils;
-import com.example.healthmanagement.ListViewForScrollView;
+import com.example.healthmanagement.customview.ListViewForScrollView;
 import com.example.healthmanagement.MyApplication;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
@@ -80,7 +80,7 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
     private List<BloodPressureItem> specifiedDayItems = new ArrayList<>();
 
     private List<ItemForAdapter> itemForAdapterList = new ArrayList<>();
-    ;
+
     Comparator<BloodPressureItem> comparator;
 
     private boolean isDataChange = false;
@@ -284,9 +284,9 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
 
         //坐标轴
         Axis axisX = new Axis(); //X轴
-        axisX.setLineColor(Color.BLACK);
+        axisX.setLineColor(Color.DKGRAY);
         axisX.setHasTiltedLabels(false);  //X坐标轴字体是斜的显示还是直的，true是斜的显示
-        axisX.setTextColor(Color.BLACK);  //设置字体颜色
+        axisX.setTextColor(Color.DKGRAY);  //设置字体颜色
         axisX.setTextSize(10);//设置字体大小
         axisX.setValues(xValues);  //填充X轴的坐标名称
         data.setAxisXBottom(axisX); //x 轴在底部
@@ -298,8 +298,8 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         axisY.setTextSize(10);//设置字体大小
         data.setAxisYLeft(axisY);  //Y轴设置在左边
         axisY.setHasLines(true);
-        axisY.setLineColor(Color.BLACK);
-        axisY.setTextColor(Color.BLACK);
+        axisY.setLineColor(Color.DKGRAY);
+        axisY.setTextColor(Color.DKGRAY);
 
 
         //设置行为属性，支持缩放、滑动以及平移
@@ -334,10 +334,6 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
             max.right = 6;
             lineChartView.setMaximumViewport(max);
         }
-//        lineChartView.setCurrentViewport(v);
-
-//        Viewport maPort = initMaxViewPort(size);
-//        lineChartView.setMaximumViewport(maPort);//最大窗口
 
         if (size != 0) {
             setDetailOfSpecifiedDay(size - 1);
@@ -397,16 +393,52 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         }
 
     }
+
+     class ItemForAdapter {
+        private boolean isMultiChoose;
+        private boolean isChecked;
+        private BloodPressureItem item;
+
+        public ItemForAdapter(boolean isMultiChoose, boolean isChecked, BloodPressureItem item) {
+            this.isMultiChoose = isMultiChoose;
+            this.isChecked = isChecked;
+            this.item = item;
+        }
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
+
+        public BloodPressureItem getItem() {
+            return item;
+        }
+
+        public void setItem(BloodPressureItem item) {
+            this.item = item;
+        }
+
+        public boolean isMultiChoose() {
+            return isMultiChoose;
+        }
+
+        public void setMultiChoose(boolean multiChoose) {
+            isMultiChoose = multiChoose;
+        }
+    }
 }
 
 class MyDetailAdapter extends BaseAdapter {
     private static final String TAG = "TAG" + "MyDetailAdapter";
-    private List<ItemForAdapter> list;
+    private List<BloodPressureDetailActivity.ItemForAdapter> list;
     private LayoutInflater inflater;
     private OnDetailItemClickListener onDetailItemClickListener;
     private Context context;
 
-    public MyDetailAdapter(Context context, List<ItemForAdapter> list) {
+    public MyDetailAdapter(Context context, List<BloodPressureDetailActivity.ItemForAdapter> list) {
         this.list = list;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
@@ -428,7 +460,7 @@ class MyDetailAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final ItemForAdapter item = getItem(position);
+        final BloodPressureDetailActivity.ItemForAdapter item = getItem(position);
         View view;
         class ViewHolder {
             TextView txtItemDate;
@@ -498,7 +530,7 @@ class MyDetailAdapter extends BaseAdapter {
     }
 
     @Override
-    public ItemForAdapter getItem(int position) {
+    public BloodPressureDetailActivity.ItemForAdapter getItem(int position) {
         return list.get(position);
     }
 
@@ -508,39 +540,5 @@ class MyDetailAdapter extends BaseAdapter {
     }
 }
 
-class ItemForAdapter {
-    private boolean isMultiChoose;
-    private boolean isChecked;
-    private BloodPressureItem item;
 
-    public ItemForAdapter(boolean isMultiChoose, boolean isChecked, BloodPressureItem item) {
-        this.isMultiChoose = isMultiChoose;
-        this.isChecked = isChecked;
-        this.item = item;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
-
-    public BloodPressureItem getItem() {
-        return item;
-    }
-
-    public void setItem(BloodPressureItem item) {
-        this.item = item;
-    }
-
-    public boolean isMultiChoose() {
-        return isMultiChoose;
-    }
-
-    public void setMultiChoose(boolean multiChoose) {
-        isMultiChoose = multiChoose;
-    }
-}
 

@@ -8,8 +8,9 @@
     android:orientation="vertical"
     tools:context="com.example.healthmanagement.activity.BloodPressureDetailActivity">
 
-    <include layout="@layout/tool_bar"
-        android:id="@+id/include"/>
+    <include
+        android:id="@+id/include"
+        layout="@layout/tool_bar" />
 
 
     <com.melnykov.fab.ObservableScrollView
@@ -23,107 +24,282 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <lecho.lib.hellocharts.view.LineChartView
-                android:id="@+id/line_chart"
+            <lecho.lib.hellocharts.view.ColumnChartView
+                android:id="@+id/column_chart_view"
                 android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                android:layout_height="300dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorPrimary" />
 
-            <RelativeLayout
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorAccent"/>
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="凌晨"
+                        android:textAlignment="center" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="#000000"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="餐前均值"
+                        android:textAlignment="center" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimaryDark"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="餐后均值"
+                        android:textAlignment="center" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="睡前"
+                        android:textAlignment="center" />
+                </LinearLayout>
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/txt_date"
+                    android:text="日期"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="此日平均" />
+                    android:layout_height="wrap_content" />
 
                 <LinearLayout
-                    android:id="@+id/linearLayout"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/textView5"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txt_date"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/txt_high_bp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp" />
-
-
-                    <TextView
-                        android:id="@+id/txt_low_bp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/linearLayout">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="记录时间" />
+                        android:text="凌晨"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_before_dawn"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="收缩压" />
+                        android:text="早餐前"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
 
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_before_breakfast"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="舒张压" />
+                        android:text="早餐后"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_after_breakfast"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="午餐前"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_before_launch"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="午餐后"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_after_launch"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="晚餐前"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_before_supper"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="晚餐后"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_after_supper"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_dark_background" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="睡前"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
+
+                    <com.example.healthmanagement.customview.DetailTextView
+                        android:id="@+id/txt_before_sleep"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textAlignment="center" />
                 </LinearLayout>
 
-                <com.example.healthmanagement.ListViewForScrollView
-                    android:id="@+id/lv_one_day_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/linearLayout2">
 
-                </com.example.healthmanagement.ListViewForScrollView>
-
-
-
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -133,12 +309,12 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="30dp"
         android:src="@drawable/ic_add_white_24dp"
         fab:fab_colorNormal="@color/colorAccent"
         fab:fab_colorPressed="@color/accent_pressed"
-        fab:fab_colorRipple="@color/ripple"/>
+        fab:fab_colorRipple="@color/ripple" />
 
 </RelativeLayout>
