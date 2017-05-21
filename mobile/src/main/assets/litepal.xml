@@ -8,5 +8,6 @@
         <mapping class="com.example.healthmanagement.model.User" />
         <mapping class="com.example.healthmanagement.model.BloodOxygenItem" />
         <mapping class="com.example.healthmanagement.model.HeartRateItem" />
+        <mapping class="com.example.healthmanagement.model.DeletedItems" />
     </list>
 </litepal>

@@ -25,6 +25,7 @@ import com.example.healthmanagement.R;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 import com.example.healthmanagement.model.BloodPressureItem;
 import com.example.healthmanagement.model.BloodPressureRecord;
+import com.example.healthmanagement.model.DeletedItems;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 
@@ -186,7 +187,18 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
                             if (itemForAdapterList.get(i).isChecked()) {
                                 String date = String.valueOf(specifiedDayItems.get(i).getDate().getTime());
                                 Log.d(TAG, "onClick: " + date + " " + specifiedDayItems.get(i).getDate() + " " + user_id);
-                                DataSupport.deleteAll(BloodPressureItem.class, "date =? and user_id=?", date, user_id);
+                                List<BloodPressureItem> deleteList = DataSupport.where("date =? and user_id=?", date, user_id).find(BloodPressureItem.class);
+//                                DataSupport.deleteAll(BloodPressureItem.class, "date =? and user_id=?", date, user_id);
+                                BloodPressureItem item = deleteList.get(0);
+                                String object_id = item.getObject_id();
+                                if (object_id != null && object_id.trim().length() != 0) {
+                                    DeletedItems deletedItems = new DeletedItems();
+                                    deletedItems.setTableNameOfItem("bloodpressureitem");
+                                    deletedItems.setObjectIdOfItem(object_id);
+                                    deletedItems.save();
+                                    Log.d(TAG, "onClick: " + "删除表增加"+" bp "+object_id);
+                                }
+                                item.delete();
                                 num++;
                             }
                         }

@@ -27,6 +27,9 @@ public class BloodSugarItem extends DataSupport  {
     private float beforeDawn;
     private Date lastModifyDate;
     private User user;
+    @Column(defaultValue = "false")
+    private boolean isCloudStorage;
+    private String object_id;
 
     public Date getDate() {
         return date;
@@ -114,5 +117,21 @@ public class BloodSugarItem extends DataSupport  {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isCloudStorage() {
+        return isCloudStorage;
+    }
+
+    public void setCloudStorage(boolean cloudStorage) {
+        isCloudStorage = cloudStorage;
+    }
+
+    public String getObject_id() {
+        return object_id;
+    }
+
+    public void setObject_id(String object_id) {
+        this.object_id = object_id;
     }
 }

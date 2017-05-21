@@ -19,8 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/App">
-        <activity
-            android:name=".activity.MainActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,12 +35,18 @@
         <activity
             android:name=".activity.BloodPressureDetailActivity"
             android:label="血压" />
+        <activity
+            android:name=".activity.BloodSugarDetailActivity"
+            android:label="血糖" />
+        <activity
+            android:name=".activity.BloodSugarRecordActivity"
+            android:label="记录血糖" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.RegisterActivity"></activity>
 
-        <activity android:name=".activity.BloodSugarDetailActivity"
-            android:label="血糖"/>
-        <activity android:name=".activity.BloodSugarRecordActivity"
-            android:label="记录血糖"/>
-
+        <service
+            android:name=".service.CloudStorageService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

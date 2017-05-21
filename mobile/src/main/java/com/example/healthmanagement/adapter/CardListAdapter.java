@@ -95,7 +95,9 @@ public class CardListAdapter extends ArrayAdapter<Record> {
             viewHolderScatter.signName = (TextView) view.findViewById(R.id.txt_card_name);
             viewHolderScatter.signImg = (ImageView) view.findViewById(R.id.img_card_icon);
             viewHolderScatter.latestDetail = (TextView) view.findViewById(R.id.txt_latest_data_detail);
+
             viewHolderScatter.lastRecordTime = (TextView) view.findViewById(R.id.txt_last_record_date);
+
             viewHolderScatter.recordBtn = (Button) view.findViewById(R.id.btn_record);
             viewHolderScatter.scatterChart = (ScatterChart) view.findViewById(R.id.scatter_chart);
             view.setTag(viewHolderScatter);
@@ -118,10 +120,14 @@ public class CardListAdapter extends ArrayAdapter<Record> {
             }
         });
 
+        viewHolderScatter.scatterChart.clear();           //清空残留数据
+        viewHolderScatter.lastRecordTime.setText("");
+        viewHolderScatter.latestDetail.setText("");
         viewHolderScatter.scatterChart.getDescription().setEnabled(false);
         viewHolderScatter.scatterChart.getLegend().setEnabled(false);
         viewHolderScatter.scatterChart.setScaleEnabled(false);
         viewHolderScatter.scatterChart.setTouchEnabled(false);
+
         switch (record.getName()) {
             case "blood_pressure":
                 BloodPressureRecord bloodPressureRecord = (BloodPressureRecord) record;

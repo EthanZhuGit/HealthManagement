@@ -99,6 +99,10 @@ public class BloodSugarRecordActivity extends AppCompatActivity implements View.
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (dateDefault.after(new Date())) {
+                    Toast.makeText(BloodSugarRecordActivity.this, "时间不应该在当前时间之后", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 List<BloodSugarItem> items = DataSupport.
                         where("date=? and user_id=?", String.valueOf(dateDefault.getTime()), user_id)
                         .find(BloodSugarItem.class);
@@ -181,34 +185,42 @@ public class BloodSugarRecordActivity extends AppCompatActivity implements View.
                         case 0:
                             item.setBeforeDawn(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 1:
                             item.setBeforeBreakfast(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 2:
                             item.setAfterBreakfast(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 3:
                             item.setBeforeLunch(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 4:
                             item.setAfterLunch(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 5:
                             item.setBeforeSupper(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 6:
                             item.setAfterSupper(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                         case 7:
                             item.setBeforeSleep(numChoosed);
                             item.setLastModifyDate(lastModifyDate);
+                            item.setToDefault("isCloudStorage");
                             break;
                     }
                     String time=String.valueOf(item.getDate().getTime());
@@ -218,6 +230,7 @@ public class BloodSugarRecordActivity extends AppCompatActivity implements View.
 //                    user.saveOrUpdate("id=?", user_id);
 //                    user.save();
                     int i = item.updateAll("date=?", time);
+
                     Log.d(TAG, "onClick: 血糖 " + i + "条记录修改");
                 } else {
                     Toast.makeText(BloodSugarRecordActivity.this,

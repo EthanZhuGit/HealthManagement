@@ -42,6 +42,8 @@ public class HelpUtils {
         for (int i = 0; i < array.length; i++) {
             IsCardShow it = new IsCardShow("", false);
             isCardShows.add(it);
+        }
+        for (int i = 0; i < array.length; i++) {
             isCardShows.set(preferences.getInt(array[i], i),
                     new IsCardShow(array[i], preferences.getBoolean(array[i] + KEY, true)));
         }

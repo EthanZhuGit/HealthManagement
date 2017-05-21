@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.healthmanagement.HelpUtils;
 import com.example.healthmanagement.MyApplication;
@@ -104,6 +105,10 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (dateDefault.after(new Date())) {
+                    Toast.makeText(BloodPressureRecordActivity.this, "时间不应该在当前时间之后", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 bloodPressureItem = new BloodPressureItem();
                 bloodPressureItem.setDate(dateDefault);
                 bloodPressureItem.setSystolicPressure(highPressure);

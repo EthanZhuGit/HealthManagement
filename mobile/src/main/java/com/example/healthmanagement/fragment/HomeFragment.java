@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.example.healthmanagement.HelpUtils;
 import com.example.healthmanagement.customview.ListViewForScrollView;
 import com.example.healthmanagement.MyApplication;
@@ -19,17 +23,26 @@ import com.example.healthmanagement.activity.BloodSugarDetailActivity;
 import com.example.healthmanagement.activity.BloodSugarRecordActivity;
 import com.example.healthmanagement.activity.CardShowControlActivity;
 import com.example.healthmanagement.adapter.CardListAdapter;
+import com.example.healthmanagement.datebase.CloudDataBaseHelper;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
+import com.example.healthmanagement.model.BloodOxygenItem;
+import com.example.healthmanagement.model.BloodPressureItem;
+import com.example.healthmanagement.model.BloodSugarItem;
+import com.example.healthmanagement.model.HeartRateItem;
 import com.example.healthmanagement.model.IsCardShow;
 import com.example.healthmanagement.model.Record;
+import com.example.healthmanagement.model.User;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements CardListAdapter.OnCardClickListener {
 
     private static final String TAG = "TAG" + "HomeFragment";
-    private static final String USER_CLOUD_ID = "user_cloud_id";
     public static final int REQUEST_CODE_CARDCONTROL = 100;
     public static final int RESULT_CODE_CARDCONTROL = 101;
     public static final int REQUEST_CODE_RECORD_HOME_TO_BPDA = 102;
@@ -41,34 +54,31 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     private Button btnCardShowControl;
     private CardListAdapter cardListAdapter;
     private String user_id;
-    private Record record;
     private List<Record> records = new ArrayList<>();
 
     private ArrayList<IsCardShow> cardShowControlArrayList = new ArrayList<>();
+    private boolean isBPDataDownLoad = false;
+    private boolean isBSDataDownLoad = false;
+
+    private User user;
+    private String object_id;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    public static HomeFragment newInstance(String s) {
-        HomeFragment homeFragment = new HomeFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(USER_CLOUD_ID, s);
-        homeFragment.setArguments(bundle);
-        return homeFragment;
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            user_id = getArguments().getString(USER_CLOUD_ID);
-            Log.d(TAG, "onCreate: " + user_id);
-            MyApplication myApplication = (MyApplication) getContext().getApplicationContext();
-            myApplication.setUid(user_id);
-        }
-
-
+        MyApplication myApplication = (MyApplication) getContext().getApplicationContext();
+        user_id = myApplication.getUid();
+        List<User> users = DataSupport.where("id=?", user_id).find(User.class);
+        user = users.get(0);
+        object_id = user.getObject_id();
     }
 
     @Override
@@ -156,35 +166,20 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
             }
         });
 
-//        java.util.Date date = new java.util.Date();
-//        LocalDateBaseHelper.saveBloodPressureItem("18086742831", new java.util.Date(1494217984000L), 100.0f, 90.0f, new java.util.Date(1494217984000L));
-//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494397812000L), 115.0f, 80.0f,new java.util.Date(1494397812000L));
-//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494292745000L), 130.0f, 100.0f,new java.util.Date(1494292745000L));
-//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",new java.util.Date(1494292749000L), 125.0f, 92.0f,new java.util.Date(1494292749000L));
-//        LocalDateBaseHelper.saveBloodPressureItem("18086742831",date,150.0f,90.0f,date);
         setRecordList();
 
-//
-//        BloodPressureItem item = new BloodPressureItem(new java.util.Date(), 150.0f, 90.0f);
-//        item.save();
-//        user.getBloodPressureItemList().add(item);
-//        user.saveOrUpdate("phonenum=?", "18086742831");
-//        String startTime = String.valueOf(LocalDateBaseHelper.getSenvenDaysBeforStartTime().getTime());
-//        String startTime = "1494683638763";
-//        String endTime = String.valueOf(new java.util.Date().getTime());
-//        List<BloodPressureItem> q = DataSupport.where("date>? and date<? and user_id=?",startTime,endTime,"1").find(BloodPressureItem.class);
-//        for (BloodPressureItem b :
-//                q) {
-//            Log.d(TAG, "onCreateView: " + b.getDate().getTime());
-//        }
-
-
-//        List<BloodPressureItem> q = DataSupport.where("user_id=?", "1").find(BloodPressureItem.class);
-//        record = new BloodPressureRecord(bloodPressureItemListTest);
-//        records.add(record);
         cardListAdapter = new CardListAdapter(getContext(), R.layout.card_item, records);
         cardListAdapter.setOnCardClickListener(this);
         cardListView.setAdapter(cardListAdapter);
+
+        //从云端下载数据
+        if (DataSupport.count(BloodPressureItem.class) == 0
+                && DataSupport.count(BloodSugarItem.class) == 0
+                && DataSupport.count(HeartRateItem.class) == 0
+                && DataSupport.count(BloodOxygenItem.class) == 0) {
+            downLoadBloodSugar(object_id, user);
+            downLoadBloodPressure(object_id, user);
+        }
         return view;
     }
 
@@ -256,6 +251,100 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
         super.onStop();
         HelpUtils.saveCardShowStatus(getContext(), cardShowControlArrayList);
         Log.d(TAG, "onStop: ");
+    }
+
+    private void downLoadBloodSugar(final String objectIdOfUser, final User user) {
+        AVQuery<AVObject> query = new AVQuery<>("bloodsugaritem");
+        query.selectKeys(Arrays.
+                asList("date", "beforebreakfast", "afterbreakfast",
+                        "beforelunch", "afterlunch", "beforesupper",
+                        "aftersupper", "beforesleep", "beforedawn", "lastmodifydate"));
+        query.whereEqualTo("user_object_id", objectIdOfUser);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    Log.d(TAG, "done: download bs" + list.size());
+                    for (AVObject item : list) {
+                        String object_id = item.getObjectId();
+                        Date date = item.getDate("date");
+                        Date lastmodifydate = item.getDate("lastmodifydate");
+                        float beforeBreakfast = item.getNumber("beforebreakfast").floatValue();
+                        float afterBreakfast = item.getNumber("afterbreakfast").floatValue();
+                        float beforeLunch =  item.getNumber("beforelunch").floatValue();
+                        float afterLunch = item.getNumber("afterlunch").floatValue();
+                        float beforeSupper = item.getNumber("beforesupper").floatValue();
+                        float afterSupper =item.getNumber("aftersupper").floatValue();
+                        float beforeSleep = item.getNumber("beforesleep").floatValue();
+                        float beforeDawn = item.getNumber("beforedawn").floatValue();
+                        BloodSugarItem bloodSugarItem = new BloodSugarItem();
+                        bloodSugarItem.setObject_id(object_id);
+                        bloodSugarItem.setDate(date);
+                        bloodSugarItem.setLastModifyDate(lastmodifydate);
+                        bloodSugarItem.setBeforeBreakfast(beforeBreakfast);
+                        bloodSugarItem.setAfterBreakfast(afterBreakfast);
+                        bloodSugarItem.setBeforeLunch(beforeLunch);
+                        bloodSugarItem.setAfterLunch(afterLunch);
+                        bloodSugarItem.setBeforeSupper(beforeSupper);
+                        bloodSugarItem.setAfterSupper(afterSupper);
+                        bloodSugarItem.setBeforeSleep(beforeSleep);
+                        bloodSugarItem.setBeforeDawn(beforeDawn);
+                        bloodSugarItem.setCloudStorage(true);
+                        bloodSugarItem.setUser(user);
+                        bloodSugarItem.save();
+                    }
+                    isBSDataDownLoad = true;
+                    if (isBPDataDownLoad && isBSDataDownLoad) {
+                        setRecordList();
+                        cardListAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "done: " + "download complete");
+                    }
+                } else {
+                    Log.d(TAG, "done: " + e.getMessage());
+                }
+            }
+        });
+
+    }
+
+    private void downLoadBloodPressure(String objectIdOfUser, final User user) {
+        AVQuery<AVObject> query = new AVQuery<>("bloodpressureitem");
+        query.selectKeys(Arrays.asList("date", "systolicpressure", "diastolicpressure", "lastmodifydate"));
+        query.whereEqualTo("user_object_id", objectIdOfUser);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    Log.d(TAG, "done: download bp" + list.size());
+                    for (AVObject object : list) {
+                        String object_id = object.getObjectId();
+                        Date date = object.getDate("date");
+                        Date lastmodifydate = object.getDate("lastmodifydate");
+                        float systolicpressure = object.getNumber("systolicpressure").floatValue();
+                        float diastolicpressure =object.getNumber("diastolicpressure").floatValue();
+                        BloodPressureItem item = new BloodPressureItem();
+                        item.setObject_id(object_id);
+                        item.setDate(date);
+                        item.setLastModifyDate(lastmodifydate);
+                        item.setSystolicPressure(systolicpressure);
+                        item.setDiastolicPressure(diastolicpressure);
+                        item.setCloudStorage(true);
+                        item.setUser(user);
+                        item.save();
+                    }
+                    isBPDataDownLoad = true;
+                    if (isBPDataDownLoad && isBSDataDownLoad) {
+                        setRecordList();
+                        cardListAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "done: " + "download complete");
+                    }
+                } else {
+                    Log.d(TAG, "done: " + e.getMessage());
+                }
+            }
+        });
+
+
     }
 }
 

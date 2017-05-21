@@ -86,7 +86,7 @@ public class LocalDateBaseHelper {
      * @param <T>
      * @return
      */
-    private static <T> List<T> getRecord(String user_id, Class<T> tClass) {
+    private static <T extends DataSupport> List<T> getRecord(String user_id, Class<T> tClass ) {
         List<T> list = new ArrayList<>();
         Date date = new Date();
         int daysWithRecord = 0;
@@ -175,5 +175,11 @@ public class LocalDateBaseHelper {
 //        User user = users.get(0);
 //        return String.valueOf(user.getId());
 //    }
+
+
+    public static String getUserId(String object_id) {
+        List<User> users = DataSupport.where("object_id=?", object_id).find(User.class);
+        return String.valueOf(users.get(0).getId());
+    }
 
 }

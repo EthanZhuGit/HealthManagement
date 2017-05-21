@@ -25,6 +25,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     wearApp project(':wear')
+    compile files('libs/drag-sort-listview.jar')
+    compile files('libs/scale-ruler.jar')
+
     compile 'com.google.android.gms:play-services-wearable:10.2.4'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
@@ -38,10 +41,8 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'org.litepal.android:core:1.5.1'
     compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/drag-sort-listview.jar')
-    compile files('libs/scale-ruler.jar')
+    compile 'cn.leancloud.android:avoscloud-statistics:v3.+'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
-
+    testCompile 'junit:junit:4.12'
 }
