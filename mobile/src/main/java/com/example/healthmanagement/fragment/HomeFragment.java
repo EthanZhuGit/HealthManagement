@@ -25,7 +25,6 @@ import com.example.healthmanagement.activity.BloodSugarDetailActivity;
 import com.example.healthmanagement.activity.BloodSugarRecordActivity;
 import com.example.healthmanagement.activity.CardShowControlActivity;
 import com.example.healthmanagement.adapter.CardListAdapter;
-import com.example.healthmanagement.datebase.CloudDataBaseHelper;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 import com.example.healthmanagement.model.BloodOxygenItem;
 import com.example.healthmanagement.model.BloodPressureItem;
@@ -99,6 +98,8 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                 setRecordList();
                 Log.d(TAG, "onActivityResult: " + records.size());
                 cardListAdapter.notifyDataSetChanged();
+                HelpUtils.saveCardShowStatus(getContext(), cardShowControlArrayList);
+
                 break;
             case REQUEST_CODE_RECORD_HOME_TO_BPDA:
                 if (resultCode == BloodPressureDetailActivity.RESULT_CODE_CHANGE_BPDA) {
@@ -193,7 +194,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
 
         setRecordList();
 
-        cardListAdapter = new CardListAdapter(getContext(), R.layout.card_item, records);
+        cardListAdapter = new CardListAdapter(getContext(), R.layout.item_card, records);
         cardListAdapter.setOnCardClickListener(this);
         cardListView.setAdapter(cardListAdapter);
 
@@ -281,7 +282,6 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     @Override
     public void onStop() {
         super.onStop();
-        HelpUtils.saveCardShowStatus(getContext(), cardShowControlArrayList);
         Log.d(TAG, "onStop: ");
     }
 

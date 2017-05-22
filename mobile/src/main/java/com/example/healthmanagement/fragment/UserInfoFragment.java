@@ -1,20 +1,26 @@
 package com.example.healthmanagement.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
 import com.example.healthmanagement.R;
+import com.example.healthmanagement.activity.LoginActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +34,7 @@ public class UserInfoFragment extends Fragment {
     private EditText heightEdit;
     private EditText weightEdit;
     private AVUser userLocal;
-
+    private Button logOut;
     private boolean isEdit=false;
 
     public UserInfoFragment() {
@@ -65,14 +71,35 @@ public class UserInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isEdit) {
-                    disableEdit();
-                    Toast.makeText(getContext(), "已保存", Toast.LENGTH_SHORT).show();
-                    fab.setImageResource(R.drawable.ic_edit);
+                    userLocal.put("name", nameEdit.getText());
+                    userLocal.put("sex", sexEdit.getText());
+                    userLocal.put("height",Float.valueOf((heightEdit.getText().toString())));
+                    userLocal.put("weight", Float.valueOf(weightEdit.getText().toString()));
+                    userLocal.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                Toast.makeText(getContext(), "同步成功", Toast.LENGTH_SHORT).show();
+                                disableEdit();
+                                fab.setImageResource(R.drawable.ic_edit);
+                            }
+                        }
+                    });
                 } else {
                     enableEdit();
                     fab.setImageResource(R.drawable.ic_confirm);
                 }
 
+            }
+        });
+
+        logOut = (Button) view.findViewById(R.id.log_out);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AVUser.getCurrentUser().logOut();
+                startActivity(new Intent(getContext(), LoginActivity.class));
+                getActivity().finish();
             }
         });
 

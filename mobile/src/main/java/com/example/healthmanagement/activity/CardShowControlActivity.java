@@ -5,17 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.healthmanagement.HelpUtils;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.adapter.CardControlAdapter;
 import com.example.healthmanagement.fragment.HomeFragment;
 import com.example.healthmanagement.model.IsCardShow;
-import com.example.healthmanagement.model.Record;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CardShowControlActivity extends AppCompatActivity
         implements CardControlAdapter.OnIsShowChangedListener {
@@ -33,7 +30,7 @@ public class CardShowControlActivity extends AppCompatActivity
         listView = (DragSortListView) findViewById(R.id.card_show_control_list_view);
         Bundle bundle = getIntent().getExtras();
         lists = bundle.getParcelableArrayList("list_send");
-        adapter = new CardControlAdapter(this, R.layout.card_show_control_list_item, lists);
+        adapter = new CardControlAdapter(this, R.layout.item_card_show_control_list, lists);
         adapter.setOnIsShowChangeListener(this);
         listView.setAdapter(adapter);
         listView.setDropListener(onDrop);

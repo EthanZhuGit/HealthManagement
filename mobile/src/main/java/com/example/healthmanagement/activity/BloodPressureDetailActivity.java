@@ -477,7 +477,7 @@ class MyDetailAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            view = inflater.inflate(R.layout.bp_one_day_detail_item, null);
+            view = inflater.inflate(R.layout.item_bp_one_day_detail, null);
             viewHolder.txtItemDate = (TextView) view.findViewById(R.id.txt_bp_detail_date);
             viewHolder.txtItemHP = (TextView) view.findViewById(R.id.txt_bp_detail_high);
             viewHolder.txtItemLP = (TextView) view.findViewById(R.id.txt_bp_detail_low);

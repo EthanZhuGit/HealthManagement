@@ -10,7 +10,6 @@ public interface Record {
 
     String BLOOD_PRESSURE = "blood_pressure";
     String BLOOD_SUGAR = "blood_sugar";
-    String STEP_COUNT = "step_count";
     String HEART_RATE = "heart_rate";
     String BLOOD_OXYGEN = "blood_oxygen";
 

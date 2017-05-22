@@ -13,4 +13,9 @@
     <color name="purple">#A020F0</color>
     <color name="dark">#000000</color>
     <color name="darkgrenn">#458B00</color>
+    <color name="colorBackground">#EEEEEE</color>
+    <color name="colorCard">#FFFFFF</color>
+    <color name="colorText">#2C2C2C</color>
+    <color name="comment_reply">#9ba4a3</color>
+
 </resources>

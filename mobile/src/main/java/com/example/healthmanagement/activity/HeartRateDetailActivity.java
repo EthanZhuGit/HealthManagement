@@ -451,7 +451,7 @@ public class HeartRateDetailActivity extends AppCompatActivity {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            view = inflater.inflate(R.layout.hr_oneday_detail_list_item, null);
+            view = inflater.inflate(R.layout.item_hr_oneday_detail_list, null);
             viewHolder.txtItemDate = (TextView) view.findViewById(R.id.txt_bp_detail_date);
             viewHolder.txtItemHP = (TextView) view.findViewById(R.id.txt_bp_detail_high);
             viewHolder.checkBox = (CheckBox) view.findViewById(R.id.checkbox_select);
