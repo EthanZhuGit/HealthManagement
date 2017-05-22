@@ -64,7 +64,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activity.HeartRateDetailActivity"></activity>
+        <activity android:name=".activity.HeartRateDetailActivity" />
     </application>
 
 </manifest>

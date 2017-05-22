@@ -8,23 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVOSCloud;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
 import com.example.healthmanagement.MyApplication;
-import com.example.healthmanagement.datebase.CloudDataBaseHelper;
-import com.example.healthmanagement.datebase.LocalDateBaseHelper;
 import com.example.healthmanagement.fragment.HealthNewsFragment;
 import com.example.healthmanagement.fragment.HomeFragment;
-import com.example.healthmanagement.fragment.MyInfoFragment;
 import com.example.healthmanagement.R;
-import com.example.healthmanagement.model.BloodOxygenItem;
-import com.example.healthmanagement.model.BloodPressureItem;
-import com.example.healthmanagement.model.BloodSugarItem;
-import com.example.healthmanagement.model.HeartRateItem;
+import com.example.healthmanagement.fragment.UserInfoFragment;
 import com.example.healthmanagement.model.User;
 import com.example.healthmanagement.service.CloudStorageService;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -32,8 +21,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -83,11 +70,11 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bnve);
         Fragment homeFrag = HomeFragment.newInstance();
-        Fragment healthNewsFrag = HealthNewsFragment.newInstance(1);
-        Fragment myInfoFrag = MyInfoFragment.newInstance("1", "2");
+        Fragment healthNesFrag = new HealthNewsFragment();
+        Fragment userInfoFrag = new UserInfoFragment();
         fragmentList.add(homeFrag);
-        fragmentList.add(healthNewsFrag);
-        fragmentList.add(myInfoFrag);
+        fragmentList.add(healthNesFrag);
+        fragmentList.add(userInfoFrag);
         FragmentManager fragmentManager = getSupportFragmentManager();
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         viewPager.setAdapter(myFragmentPagerAdapter);

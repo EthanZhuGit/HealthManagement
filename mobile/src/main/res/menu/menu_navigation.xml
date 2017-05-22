@@ -3,16 +3,16 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="home" />
+        android:title="主页" />
 
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="dashboard" />
+        android:title="资讯" />
 
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_me"
-        android:title="notifications" />
+        android:title="我的" />
 
 </menu>
