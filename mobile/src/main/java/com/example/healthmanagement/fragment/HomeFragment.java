@@ -14,6 +14,8 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.example.healthmanagement.HelpUtils;
+import com.example.healthmanagement.activity.HeartRateDetailActivity;
+import com.example.healthmanagement.activity.HeartRateRecordActivity;
 import com.example.healthmanagement.customview.ListViewForScrollView;
 import com.example.healthmanagement.MyApplication;
 import com.example.healthmanagement.R;
@@ -49,6 +51,9 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     public static final int REQUEST_CODE_RECORD_HOME_TO_BPRA = 103;
     public static final int REQUEST_CODE_RECORD_HOME_TO_BSDA = 104;
     public static final int REQUEST_CODE_RECORD_HOME_TO_BSRA = 105;
+    public static final int REQUEST_CODE_RECORD_HOME_TO_HRDA = 106;
+    public static final int REQUEST_CODE_RECORD_HOME_TO_HRRA = 107;
+
 
     private ListViewForScrollView cardListView;
     private Button btnCardShowControl;
@@ -139,6 +144,26 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                     }
                     cardListAdapter.notifyDataSetChanged();
                 }
+                break;
+            case REQUEST_CODE_RECORD_HOME_TO_HRDA:
+                if (resultCode == HeartRateDetailActivity.RESULT_CODE_CHANGE_HRDA) {
+                    Log.d(TAG, "onActivityResult: " + "data change from hrda");
+                    Record record = LocalDateBaseHelper.getHeartRateRecord(user_id);
+                    if (records.contains(record)) {
+                        records.set(records.indexOf(record), record);
+                    }
+                    cardListAdapter.notifyDataSetChanged();
+                }
+                break;
+            case REQUEST_CODE_RECORD_HOME_TO_HRRA:
+                if (resultCode == REQUEST_CODE_RECORD_HOME_TO_HRRA) {
+                    Log.d(TAG, "onActivityResult: " + "data change from hrra");
+                    Record record = LocalDateBaseHelper.getHeartRateRecord(user_id);
+                    if (records.contains(record)) {
+                        records.set(records.indexOf(record), record);
+                    }
+                    cardListAdapter.notifyDataSetChanged();
+                }
 
         }
     }
@@ -198,6 +223,9 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                         intent = new Intent(getContext(), BloodSugarDetailActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_RECORD_HOME_TO_BSDA);
                         break;
+                    case Record.HEART_RATE:
+                        intent = new Intent(getContext(), HeartRateDetailActivity.class);
+                        startActivityForResult(intent,REQUEST_CODE_RECORD_HOME_TO_HRDA);
                 }
                 break;
             case R.id.btn_record:
@@ -210,6 +238,10 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                     case Record.BLOOD_SUGAR:
                         intent1 = new Intent(getContext(), BloodSugarRecordActivity.class);
                         startActivityForResult(intent1, REQUEST_CODE_RECORD_HOME_TO_BSRA);
+                        break;
+                    case Record.HEART_RATE:
+                        intent1 = new Intent(getContext(), HeartRateRecordActivity.class);
+                        startActivityForResult(intent1,REQUEST_CODE_RECORD_HOME_TO_HRRA);
                         break;
                 }
                 break;

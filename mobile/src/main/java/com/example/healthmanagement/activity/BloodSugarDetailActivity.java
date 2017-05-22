@@ -158,7 +158,7 @@ public class BloodSugarDetailActivity extends AppCompatActivity {
                 BloodSugarItemForChart item = bloodSugarItemForChartList.get(i);
                 xValues.add(new AxisValue(i).setLabel(HelpUtils.getMonthDayInString(item.getDate())));
                 values.add(new SubcolumnValue(item.getBeforeDawn(), ContextCompat.getColor(this, R.color.colorAccent)));
-                values.add(new SubcolumnValue(item.getBeforeMealAvg(), ContextCompat.getColor(this, R.color.dark)));
+                values.add(new SubcolumnValue(item.getBeforeMealAvg(), ContextCompat.getColor(this, R.color.darkgrenn)));
                 values.add(new SubcolumnValue(item.getAfterMealAvg(), ContextCompat.getColor(this, R.color.colorPrimaryDark)));
                 values.add(new SubcolumnValue(item.getBeforeSleep(), ContextCompat.getColor(this, R.color.purple)));
 

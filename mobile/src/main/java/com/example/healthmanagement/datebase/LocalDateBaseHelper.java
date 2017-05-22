@@ -126,10 +126,6 @@ public class LocalDateBaseHelper {
         return  DataSupport.where("date >= ? and < ?", String.valueOf(startTime), String.valueOf(endTime)).find(tClass);
     }
 
-    public static <T> List<T> getRecord(Class<T> tClass, Date date, int days) {
-        return null;
-    }
-
     /**
      * @param uid               用户id
      * @param date              日期
@@ -155,12 +151,6 @@ public class LocalDateBaseHelper {
         List<User> users = DataSupport.where("id=?", uid).find(User.class);
         User user = users.get(0);
         Log.d(TAG, "saveBloodPressureItem: " + user.getUsername() + user.getObject_id() + " ");
-
-//        user.getBloodPressureItemList().add(item);
-//        if (user.saveOrUpdate("id=?", uid)) {
-//            Log.d(TAG, "saveBloodPressureItem: " + "save suc");
-//        }
-//        user.save();
         item.setUser(user);
         if (item.save()) {
             Log.d(TAG, "saveBloodPressureItem: " + "suc");
@@ -170,16 +160,14 @@ public class LocalDateBaseHelper {
 
     }
 
-//    public static  String getUserIdWithObjectId(String objectId) {
-//        List<User> users = DataSupport.where("object_id=?", objectId).find(User.class);
-//        User user = users.get(0);
-//        return String.valueOf(user.getId());
-//    }
-
-
-    public static String getUserId(String object_id) {
-        List<User> users = DataSupport.where("object_id=?", object_id).find(User.class);
-        return String.valueOf(users.get(0).getId());
+    public static void saveHeartRateItem(String uid,HeartRateItem item) {
+        List<User> users = DataSupport.where("id=?", uid).find(User.class);
+        User user = users.get(0);
+        item.setUser(user);
+        item.save();
     }
+
+
+
 
 }

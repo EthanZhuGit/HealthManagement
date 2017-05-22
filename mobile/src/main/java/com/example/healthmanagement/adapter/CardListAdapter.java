@@ -21,6 +21,8 @@ import com.example.healthmanagement.model.BloodPressureItem;
 import com.example.healthmanagement.model.BloodPressureRecord;
 import com.example.healthmanagement.model.BloodSugarItemForChart;
 import com.example.healthmanagement.model.BloodSugarRecord;
+import com.example.healthmanagement.model.HeartRateItem;
+import com.example.healthmanagement.model.HeartRateRecord;
 import com.example.healthmanagement.model.Record;
 import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -297,7 +299,7 @@ public class CardListAdapter extends ArrayAdapter<Record> {
                     ScatterDataSet beforeMealAvgDataSet = new ScatterDataSet(beforeMealAvg, "餐前均值");
                     beforeMealAvgDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
                     beforeMealAvgDataSet.setScatterShapeSize(22);
-                    beforeMealAvgDataSet.setColor(ContextCompat.getColor(getContext(), R.color.dark));
+                    beforeMealAvgDataSet.setColor(ContextCompat.getColor(getContext(), R.color.darkgrenn));
                     beforeMealAvgDataSet.setValueTextSize(10);
                     beforeMealAvgDataSet.setDrawValues(false);
                     ScatterDataSet afterMealAvgDataSet = new ScatterDataSet(afterMealAvg, "餐后均值");
@@ -349,11 +351,64 @@ public class CardListAdapter extends ArrayAdapter<Record> {
 
             case Record.BLOOD_OXYGEN:
                 viewHolderScatter.signName.setText("血氧");
+                viewHolderScatter.signImg.setImageResource(R.drawable.ic_blood_oxygen);
                 viewHolderScatter.scatterChart.setNoDataText("无记录");
                 break;
             case Record.HEART_RATE:
                 viewHolderScatter.signName.setText("心率");
+                viewHolderScatter.signImg.setImageResource(R.drawable.ic_heart_rate);
                 viewHolderScatter.scatterChart.setNoDataText("无记录");
+                HeartRateRecord heartRateRecord = (HeartRateRecord) record;
+                List<HeartRateItem> heartRateItemList = heartRateRecord.getHeartRateItemListForCHart();
+                if (heartRateItemList.size() != 0) {
+                    ArrayList<String> dateList = new ArrayList<>();
+                    List<Entry> heartRate = new ArrayList<>();
+                    for (int i = 0; i < heartRateItemList.size(); i++) {
+                        HeartRateItem item = heartRateItemList.get(i);
+                        String dateString = new Date(item.getDate().getTime()).toString();
+                        dateList.add(dateString);
+                        int rate = item.getRate();
+                        heartRate.add(new Entry(i, rate));
+                        if (i == heartRateItemList.size() - 1) {
+                            viewHolderScatter.lastRecordTime.setText(HelpUtils.getMonthDayInString(item.getDate()));
+                            StringBuffer buffer = new StringBuffer();
+                            if (rate < 60) {
+                                buffer.append("静息心率:" + rate + " 偏低");
+                            } else if (rate < 100) {
+                                buffer.append("静息心率:" + rate + " 正常");
+                            } else {
+                                buffer.append("静息心率:" + rate + " 过高");
+                            }
+
+                            viewHolderScatter.latestDetail.setText(buffer.toString());
+                        }
+                    }
+                    ScatterDataSet heartRateDataSet = new ScatterDataSet(heartRate, "静息心率");
+                    heartRateDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+                    heartRateDataSet.setScatterShapeSize(22);
+                    heartRateDataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                    heartRateDataSet.setValueTextSize(10);
+                    heartRateDataSet.setDrawValues(false);
+
+                    List<IScatterDataSet> scatterDataSetList = new ArrayList<>();
+                    scatterDataSetList.add(heartRateDataSet);
+                    ScatterData scatterData = new ScatterData(scatterDataSetList);
+                    viewHolderScatter.scatterChart.setData(scatterData);
+
+                    XAxis xAxis = viewHolderScatter.scatterChart.getXAxis();
+                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                    xAxis.setAxisLineWidth(2);
+                    YAxis yAxis = viewHolderScatter.scatterChart.getAxisLeft();
+                    yAxis.setAxisLineWidth(2);
+                    YAxis yAxis1 = viewHolderScatter.scatterChart.getAxisRight();
+                    yAxis1.setEnabled(false);
+
+                    xAxis.setValueFormatter(new MyAxisValueFormatter(dateList));
+                    xAxis.setAxisMaximum(6.3f);
+                    xAxis.setAxisMinimum(-0.3f);
+                    yAxis.resetAxisMaximum();
+                    yAxis.resetAxisMinimum();
+                }
                 break;
         }
         return view;

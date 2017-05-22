@@ -17,7 +17,6 @@ public class HeartRateItem extends DataSupport  {
     @Column(unique = true)
     private Date date;
     private int rate;
-    private Date lastModifyDate;
     private User user;
     @Column(defaultValue = "false")
     private boolean isCloudStorage;
@@ -39,13 +38,6 @@ public class HeartRateItem extends DataSupport  {
         this.rate = rate;
     }
 
-    public Date getLastModifyDate() {
-        return lastModifyDate;
-    }
-
-    public void setLastModifyDate(Date lastModifyDate) {
-        this.lastModifyDate = lastModifyDate;
-    }
 
     public User getUser() {
         return user;

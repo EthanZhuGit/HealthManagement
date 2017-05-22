@@ -1,6 +1,11 @@
 package com.example.healthmanagement;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
 import android.view.View;
@@ -18,17 +23,28 @@ public class MainActivity extends WearableActivity {
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
     private TextView mClockView;
+    private float sum;
+    String txt;
+    private MyReceiver receiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setAmbientEnabled();
-
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        receiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("data_update");
+        filter.addAction("data_avg");
+        localBroadcastManager.registerReceiver(receiver, filter);
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.text);
         mClockView = (TextView) findViewById(R.id.clock);
     }
+
+
 
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
@@ -60,5 +76,22 @@ public class MainActivity extends WearableActivity {
             mTextView.setTextColor(getResources().getColor(android.R.color.black));
             mClockView.setVisibility(View.GONE);
         }
+    }
+
+    class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            float data = intent.getFloatExtra("rate", 0);
+            int avg = intent.getIntExtra("avg", 0);
+            txt = data + "  平均  " + avg + "\n";
+            mTextView.setText(txt);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        localBroadcastManager.unregisterReceiver(receiver);
+
     }
 }

@@ -19,22 +19,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.healthmanagement.HelpUtils;
-import com.example.healthmanagement.customview.ListViewForScrollView;
 import com.example.healthmanagement.MyApplication;
 import com.example.healthmanagement.R;
+import com.example.healthmanagement.customview.ListViewForScrollView;
 import com.example.healthmanagement.datebase.LocalDateBaseHelper;
-import com.example.healthmanagement.model.BloodPressureItem;
-import com.example.healthmanagement.model.BloodPressureRecord;
+import com.example.healthmanagement.model.HeartRateItem;
 import com.example.healthmanagement.model.DeletedItems;
+import com.example.healthmanagement.model.HeartRateRecord;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 
-
 import org.litepal.crud.DataSupport;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,74 +47,64 @@ import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class BloodPressureDetailActivity extends AppCompatActivity {
-    private static final String TAG = "TAG" + "BPDetailActivity";
-    public static final int REQUEST_CODE_FROM_BPDA = 1000;
-    public static final int RESULT_CODE_CHANGE_BPDA = 1001;
-    public static final int RESULT_CODE_NO_CHANGE_BPDA = 1003;
-
-//    private LineChart lineChart;
+public class HeartRateDetailActivity extends AppCompatActivity {
+    private static final String TAG = "TAG" + "HeartRateDetail";
+    public static final int REQUEST_CODE_FROM_HRDA = 2000;
+    public static final int RESULT_CODE_CHANGE_HRDA = 2001;
+    public static final int RESULT_CODE_NO_CHANGE_HRDA = 2003;
 
     private TextView txtDate;
-    private TextView txtLowBp;
     private TextView txtHighBp;
     private ListViewForScrollView lvDetail;
     private FloatingActionButton fab;
-
     private LineChartView lineChartView;
     private List<PointValue> highLinePointList = new ArrayList<>();
-    private List<PointValue> lowLinePointList = new ArrayList<>();
     private List<AxisValue> xValues = new ArrayList<>();
 
-    private BloodPressureRecord record;
+    private HeartRateRecord record;
 
-    private MyDetailAdapter detailAdapter;
-
-    private List<BloodPressureItem> bloodPressureItemList;
-    private List<BloodPressureItem> specifiedDayItems = new ArrayList<>();
-
+    private MyHeartRateDetailAdapter detailAdapter;
+    private List<HeartRateItem> heartRateItemList;
+    private List<HeartRateItem> specifiedDayItems = new ArrayList<>();
     private List<ItemForAdapter> itemForAdapterList = new ArrayList<>();
-
-    Comparator<BloodPressureItem> comparator;
-
     private boolean isDataChange = false;
 
     private boolean isMultiChoose = false;
 
     private String user_id;
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_FROM_BPDA:
-                if (resultCode == BloodPressureRecordActivity.RESULT_CODE_CHANGE_BPRA) {
+            case REQUEST_CODE_FROM_HRDA:
+                if (resultCode == HeartRateRecordActivity.RESULT_CODE_CHANGE_HRRA) {
                     resetData();
                     isDataChange = true;
+                    Log.d(TAG, "onActivityResult: " + "data change from hrra");
                 }
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blood_pressure_detail);
+        setContentView(R.layout.activity_heart_rate_detail);
 
         MyApplication myApplication = (MyApplication) getApplicationContext();
         user_id = myApplication.getUid();
 
         initView();
 
-        record = LocalDateBaseHelper.getAllBloodPressureData(user_id);
-        bloodPressureItemList = record.getBloodPressureItemListForChart();
-        detailAdapter = new MyDetailAdapter(this, itemForAdapterList);
+        record = LocalDateBaseHelper.getAllHeartRateData(user_id);
+        heartRateItemList = record.getHeartRateItemListForCHart();
+        detailAdapter = new MyHeartRateDetailAdapter(this,itemForAdapterList);
         lvDetail.setAdapter(detailAdapter);
 
         initChartData();
         initLineChart();
 
-
-        MyDetailAdapter.OnDetailItemClickListener onDetailItemClickListener = new MyDetailAdapter.OnDetailItemClickListener() {
+        MyHeartRateDetailAdapter.OnDetailItemClickListener onDetailItemClickListener = new MyHeartRateDetailAdapter.OnDetailItemClickListener() {
             @Override
             public void onDetailItemClick(int position, boolean isChecked) {
                 itemForAdapterList.get(position).setChecked(isChecked);
@@ -150,6 +138,7 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         });
     }
 
+
     private void initView() {
         Toolbar toolBar = (Toolbar) findViewById(R.id.include);
         toolBar.setFocusable(true);
@@ -157,11 +146,10 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         toolBar.requestFocus();
         TextView toolBarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolBar.setTitle("");
-        toolBarTitle.setText("血压");
+        toolBarTitle.setText("心率");
         setSupportActionBar(toolBar);
         lineChartView = (LineChartView) findViewById(R.id.line_chart);
         txtDate = (TextView) findViewById(R.id.txt_date);
-        txtLowBp = (TextView) findViewById(R.id.txt_low_bp);
         txtHighBp = (TextView) findViewById(R.id.txt_high_bp);
         lvDetail = (ListViewForScrollView) findViewById(R.id.lv_one_day_detail);
 
@@ -180,29 +168,28 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
                             if (itemForAdapterList.get(i).isChecked()) {
                                 String date = String.valueOf(specifiedDayItems.get(i).getDate().getTime());
                                 Log.d(TAG, "onClick: " + date + " " + specifiedDayItems.get(i).getDate() + " " + user_id);
-                                List<BloodPressureItem> deleteList = DataSupport.where("date =? and user_id=?", date, user_id).find(BloodPressureItem.class);
-//                                DataSupport.deleteAll(BloodPressureItem.class, "date =? and user_id=?", date, user_id);
-                                BloodPressureItem item = deleteList.get(0);
+                                List<HeartRateItem> deleteList = DataSupport.where("date =? and user_id=?", date, user_id).find(HeartRateItem.class);
+//                                DataSupport.deleteAll(HeartRateItem.class, "date =? and user_id=?", date, user_id);
+                                HeartRateItem item = deleteList.get(0);
                                 String object_id = item.getObject_id();
                                 if (object_id != null && object_id.trim().length() != 0) {
                                     DeletedItems deletedItems = new DeletedItems();
-                                    deletedItems.setTableNameOfItem("bloodpressureitem");
+                                    deletedItems.setTableNameOfItem("heartrate");
                                     deletedItems.setObjectIdOfItem(object_id);
                                     deletedItems.save();
-                                    Log.d(TAG, "onClick: " + "删除表增加"+" bp "+object_id);
+                                    Log.d(TAG, "onClick: " + "删除表增加"+" 心率 "+object_id);
                                 }
                                 item.delete();
                                 num++;
                             }
                         }
                         if (num == 0) {
-                            Toast.makeText(BloodPressureDetailActivity.this, "无选择项", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HeartRateDetailActivity.this, "无选择项", Toast.LENGTH_SHORT).show();
                         } else if (num == itemForAdapterList.size()) {
                             isMultiChoose = false;
                             itemForAdapterList.clear();
                             detailAdapter.notifyDataSetChanged();
                             txtDate.setText("");
-                            txtLowBp.setText("0");
                             txtHighBp.setText("0");
                             lvDetail.setLongClickable(true);
                             resetData();
@@ -217,8 +204,8 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Intent intent = new Intent(BloodPressureDetailActivity.this, BloodPressureRecordActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_FROM_BPDA);
+                    Intent intent = new Intent(HeartRateDetailActivity.this, HeartRateRecordActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_FROM_HRDA);
                 }
 
             }
@@ -227,10 +214,10 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
 
 
     private void setDetailOfSpecifiedDay(int index) {
-        BloodPressureItem item = bloodPressureItemList.get(index);
+        HeartRateItem item = heartRateItemList.get(index);
         java.util.Date specifiedDay = item.getDate();
-        HashMap<java.util.Date, List<BloodPressureItem>> map = record.getItemGroupedByCalendar();
-        List<BloodPressureItem> result = map.get(specifiedDay);
+        HashMap<Date, List<HeartRateItem>> map = record.getItemGroupedByCalendar();
+        List<HeartRateItem> result = map.get(specifiedDay);
         specifiedDayItems.clear();
         specifiedDayItems.addAll(result);
         itemForAdapterList.clear();
@@ -238,37 +225,25 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
             itemForAdapterList.add(new ItemForAdapter(isMultiChoose, false, specifiedDayItems.get(i)));
         }
         detailAdapter.notifyDataSetChanged();
-        txtDate.setText(new Date(item.getDate().getTime()).toString());
-        txtHighBp.setText(String.valueOf(item.getSystolicPressure()));
-        txtLowBp.setText(String.valueOf(item.getDiastolicPressure()));
+        txtDate.setText(new java.sql.Date(item.getDate().getTime()).toString());
+        txtHighBp.setText(String.valueOf(item.getRate()));
 
     }
 
     private void initChartData() {
         xValues.clear();
         highLinePointList.clear();
-        lowLinePointList.clear();
-        if (bloodPressureItemList != null && bloodPressureItemList.size() != 0) {
-            for (int i = 0; i < bloodPressureItemList.size(); i++) {
-                BloodPressureItem item = bloodPressureItemList.get(i);
+        if (heartRateItemList != null && heartRateItemList.size() != 0) {
+            for (int i = 0; i < heartRateItemList.size(); i++) {
+                HeartRateItem item = heartRateItemList.get(i);
                 xValues.add(new AxisValue(i).setLabel(HelpUtils.getMonthDayInString(item.getDate())));
-                highLinePointList.add(new PointValue(i, item.getSystolicPressure()));
-                lowLinePointList.add(new PointValue(i, item.getDiastolicPressure()));
+                highLinePointList.add(new PointValue(i, item.getRate()));
             }
         }
     }
 
 
     private void initLineChart() {
-        Line lowLine = new Line(lowLinePointList);
-        lowLine.setColor(ContextCompat.getColor(this, R.color.colorAccent));
-        lowLine.setShape(ValueShape.CIRCLE);//折线图上每个数据点的形状  这里是圆形 （有三种 ：ValueShape.SQUARE  ValueShape.CIRCLE  ValueShape.DIAMOND）
-        lowLine.setCubic(false);//曲线是否平滑，即是曲线还是折线
-        lowLine.setFilled(false);//是否填充曲线的面积
-        lowLine.setHasLabelsOnlyForSelected(true);//点击数据坐标提示数据（设置了这个line.setHasLabels(true);就无效）
-        lowLine.setHasLines(true);//是否用线显示。如果为false 则没有曲线只有点显示
-        lowLine.setHasPoints(true);//是否显示圆点 如果为false 则没有原点只有点显示（每个数据点都是个大的圆点）
-        lowLine.setStrokeWidth(1);
 
 
         Line highLine = new Line(highLinePointList);
@@ -282,7 +257,6 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         highLine.setStrokeWidth(1);
 
         List<Line> lines = new ArrayList<>();
-        lines.add(lowLine);
         lines.add(highLine);
         LineChartData data = new LineChartData();
         data.setLines(lines);
@@ -319,7 +293,7 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
          * 注：下面的7，10只是代表一个数字去类比而已
          * 当时是为了解决X轴固定数据个数。见（http://forum.xda-developers.com/tools/programming/library-hellocharts-charting-library-t2904456/page2）;
          */
-        int size = bloodPressureItemList.size();
+        int size = heartRateItemList.size();
         Viewport v = lineChartView.getMaximumViewport();
         Viewport max = lineChartView.getMaximumViewport();
         if (size > 7) {
@@ -365,8 +339,8 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
 
     private void resetData() {
         Log.d(TAG, "resetData: ");
-        record = LocalDateBaseHelper.getAllBloodPressureData(user_id);
-        bloodPressureItemList = record.getBloodPressureItemListForChart();
+        record = LocalDateBaseHelper.getAllHeartRateData(user_id);
+        heartRateItemList = record.getHeartRateItemListForCHart();
         initChartData();
         initLineChart();
     }
@@ -388,23 +362,24 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
         }
         if (isDataChange) {
             Log.d(TAG, "onBackPressed: isDateChange" + isDataChange);
-            setResult(RESULT_CODE_CHANGE_BPDA);
+            setResult(RESULT_CODE_CHANGE_HRDA);
             finish();
             super.onBackPressed();
         } else {
-            setResult(RESULT_CODE_NO_CHANGE_BPDA);
+            setResult(RESULT_CODE_NO_CHANGE_HRDA);
             finish();
             super.onBackPressed();
         }
 
     }
 
-     class ItemForAdapter {
+
+    class ItemForAdapter {
         private boolean isMultiChoose;
         private boolean isChecked;
-        private BloodPressureItem item;
+        private HeartRateItem item;
 
-        public ItemForAdapter(boolean isMultiChoose, boolean isChecked, BloodPressureItem item) {
+        public ItemForAdapter(boolean isMultiChoose, boolean isChecked, HeartRateItem item) {
             this.isMultiChoose = isMultiChoose;
             this.isChecked = isChecked;
             this.item = item;
@@ -418,11 +393,11 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
             isChecked = checked;
         }
 
-        public BloodPressureItem getItem() {
+        public HeartRateItem getItem() {
             return item;
         }
 
-        public void setItem(BloodPressureItem item) {
+        public void setItem(HeartRateItem item) {
             this.item = item;
         }
 
@@ -436,14 +411,14 @@ public class BloodPressureDetailActivity extends AppCompatActivity {
     }
 }
 
-class MyDetailAdapter extends BaseAdapter {
+ class MyHeartRateDetailAdapter extends BaseAdapter {
     private static final String TAG = "TAG" + "MyDetailAdapter";
-    private List<BloodPressureDetailActivity.ItemForAdapter> list;
+    private List<HeartRateDetailActivity.ItemForAdapter> list;
     private LayoutInflater inflater;
     private OnDetailItemClickListener onDetailItemClickListener;
     private Context context;
 
-    public MyDetailAdapter(Context context, List<BloodPressureDetailActivity.ItemForAdapter> list) {
+    public MyHeartRateDetailAdapter(Context context, List<HeartRateDetailActivity.ItemForAdapter> list) {
         this.list = list;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
@@ -465,22 +440,20 @@ class MyDetailAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final BloodPressureDetailActivity.ItemForAdapter item = getItem(position);
+        HeartRateDetailActivity.ItemForAdapter item = getItem(position);
         View view;
         class ViewHolder {
             TextView txtItemDate;
             TextView txtItemHP;
-            TextView txtItemLP;
             CheckBox checkBox;
         }
 
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            view = inflater.inflate(R.layout.bp_one_day_detail_item, null);
+            view = inflater.inflate(R.layout.hr_oneday_detail_list_item, null);
             viewHolder.txtItemDate = (TextView) view.findViewById(R.id.txt_bp_detail_date);
             viewHolder.txtItemHP = (TextView) view.findViewById(R.id.txt_bp_detail_high);
-            viewHolder.txtItemLP = (TextView) view.findViewById(R.id.txt_bp_detail_low);
             viewHolder.checkBox = (CheckBox) view.findViewById(R.id.checkbox_select);
             view.setTag(viewHolder);
         } else {
@@ -488,11 +461,9 @@ class MyDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        float high = item.getItem().getSystolicPressure();
-        float low = item.getItem().getDiastolicPressure();
+        float high = item.getItem().getRate();
         viewHolder.txtItemDate.setText(HelpUtils.getTimeWithoutSecInString(item.getItem().getDate()));
         viewHolder.txtItemHP.setText(String.valueOf(high));
-        viewHolder.txtItemLP.setText(String.valueOf(low));
         viewHolder.checkBox.setChecked(item.isChecked());
         if (item.isMultiChoose()) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
@@ -507,11 +478,11 @@ class MyDetailAdapter extends BaseAdapter {
             viewHolder.checkBox.setVisibility(View.GONE);
         }
 
-        if (high < 90) {
+        if (high < 60) {
             viewHolder.txtItemHP.setBackgroundColor(ContextCompat.getColor(context, R.color.low));
-        } else if (high < 140) {
+        } else if (high < 100) {
             viewHolder.txtItemHP.setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-        } else if (high < 160) {
+        } else if (high < 120) {
             viewHolder.txtItemHP.setBackgroundColor(ContextCompat.getColor(context, R.color.one));
         } else if (high < 180) {
             viewHolder.txtItemHP.setBackgroundColor(ContextCompat.getColor(context, R.color.two));
@@ -519,23 +490,11 @@ class MyDetailAdapter extends BaseAdapter {
             viewHolder.txtItemHP.setBackgroundColor(ContextCompat.getColor(context, R.color.three));
         }
 
-        if (low < 60) {
-            viewHolder.txtItemLP.setBackgroundColor(ContextCompat.getColor(context, R.color.low));
-        } else if (low < 90) {
-            viewHolder.txtItemLP.setBackgroundColor(ContextCompat.getColor(context, R.color.background));
-        } else if (low < 100) {
-            viewHolder.txtItemLP.setBackgroundColor(ContextCompat.getColor(context, R.color.one));
-        } else if (low < 110) {
-            viewHolder.txtItemLP.setBackgroundColor(ContextCompat.getColor(context, R.color.two));
-        } else {
-            viewHolder.txtItemLP.setBackgroundColor(ContextCompat.getColor(context, R.color.three));
-        }
-
         return view;
     }
 
     @Override
-    public BloodPressureDetailActivity.ItemForAdapter getItem(int position) {
+    public HeartRateDetailActivity.ItemForAdapter getItem(int position) {
         return list.get(position);
     }
 
@@ -544,6 +503,3 @@ class MyDetailAdapter extends BaseAdapter {
         return position;
     }
 }
-
-
-

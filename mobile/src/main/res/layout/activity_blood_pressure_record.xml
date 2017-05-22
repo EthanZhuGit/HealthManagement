@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.healthmanagement.activity.BloodPressureRecordActivity">
 
+    <include layout="@layout/tool_bar"
+        android:id="@+id/include"/>
+
     <Button
         android:id="@+id/btn_set_date"
         android:layout_width="wrap_content"
@@ -13,6 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:text="日期"
+        android:layout_below="@id/include"
         android:layout_alignParentEnd="true" />
 
     <Button
@@ -30,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/btn_set_time"
-        android:text="血压值"
+        android:text="血压值                                  无连接设备"
         android:layout_alignParentEnd="true" />
 
 
@@ -152,25 +156,5 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="30dp"
         android:src="@drawable/ic_confirm"/>
-
-    <!--<LinearLayout-->
-
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_marginBottom="5dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-        <!--<Button-->
-            <!--android:id="@+id/btn_cancel"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="取消"/>-->
-        <!--<Button-->
-            <!--android:id="@+id/btn_confirm"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="确认"/>-->
-    <!--</LinearLayout>-->
 
 </RelativeLayout>

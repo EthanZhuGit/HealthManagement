@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -123,6 +124,14 @@ public class BloodPressureRecordActivity extends AppCompatActivity implements Vi
 
 
     private void initView() {
+        Toolbar toolBar = (Toolbar) findViewById(R.id.include);
+        toolBar.setFocusable(true);
+        toolBar.setFocusableInTouchMode(true);
+        toolBar.requestFocus();
+        TextView toolBarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolBar.setTitle("");
+        toolBarTitle.setText("记录血压");
+        setSupportActionBar(toolBar);
         setDateBtn = (Button) findViewById(R.id.btn_set_date);
         setTimeBtn = (Button) findViewById(R.id.btn_set_time);
         highPressureChoose = (DecimalScaleRulerView) findViewById(R.id.high);

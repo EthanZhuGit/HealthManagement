@@ -123,13 +123,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        CloudStorageService.startActionUpload(this);
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        CloudStorageService.startActionUpload(this);
         Log.d(TAG, "onDestroy: ");
     }
 

@@ -12,12 +12,12 @@ import com.avos.avoscloud.SaveCallback;
 import com.example.healthmanagement.model.BloodPressureItem;
 import com.example.healthmanagement.model.BloodSugarItem;
 import com.example.healthmanagement.model.DeletedItems;
+import com.example.healthmanagement.model.HeartRateItem;
 import com.example.healthmanagement.model.User;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +31,7 @@ public class CloudDataBaseHelper {
     public static void upLoad() {
         upLoadBloodPressure();
         upLoadBloodSugar();
+        upLoadHeartRate();
         deleteItemsFromCloud();
     }
 
@@ -137,6 +138,56 @@ public class CloudDataBaseHelper {
                 if (e == null) {
                     for (int i = 0; i < avObjectList.size(); i++) {
                         BloodSugarItem item = bloodSugarItemList.get(i);
+                        AVObject avObject = avObjectList.get(i);
+                        if (item.getObject_id() != null && item.getObject_id().trim().length() != 0) {
+                            item.setCloudStorage(true);
+                        } else {
+                            item.setObject_id(avObject.getObjectId());
+                            item.setCloudStorage(true);
+                        }
+                        String time = String.valueOf(item.getDate().getTime());
+                        item.updateAll("date=?", time);
+                    }
+                } else {
+                    Log.d(TAG, "done: " + e.getMessage());
+                }
+
+            }
+        });
+
+    }
+
+    private static void upLoadHeartRate() {
+        final List<HeartRateItem> heartRateItemList = DataSupport.where("iscloudstorage=?", "0").find(HeartRateItem.class, true);
+       final List<AVObject> avObjectList = new ArrayList<>();
+        Log.d(TAG, "upLoadHeartRate: " + heartRateItemList.size());
+        for (int i = 0; i < heartRateItemList.size(); i++) {
+            HeartRateItem item = heartRateItemList.get(i);
+            Log.d(TAG, "upLoadHeartRate: " + item.getUser().getObject_id());
+            String object_id = item.getObject_id();
+            String user_object_id = item.getUser().getObject_id();
+            Date date = item.getDate();
+            int rate=item.getRate();
+            AVObject avObject;
+            if (object_id != null && object_id.trim().length() != 0) {
+                Log.d(TAG, "upLoadHeartRate: " + "云端存在此记录，更新");
+                avObject = AVObject.createWithoutData("heartrateitem", object_id);
+            } else {
+                Log.d(TAG, "upHeartRatePressure: " + "云端不存在，新建");
+                avObject = new AVObject("heartrateitem");
+            }
+            avObject.put("date", date);
+            avObject.put("rate", rate);
+            avObject.put("user_object_id", user_object_id);
+            avObjectList.add(avObject);
+        }
+
+        AVObject.saveAllInBackground(avObjectList, new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    for (int i = 0; i < avObjectList.size(); i++) {
+                        HeartRateItem item = heartRateItemList.get(i);
                         AVObject avObject = avObjectList.get(i);
                         if (item.getObject_id() != null && item.getObject_id().trim().length() != 0) {
                             item.setCloudStorage(true);

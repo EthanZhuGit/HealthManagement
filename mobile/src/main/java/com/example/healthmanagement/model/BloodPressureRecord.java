@@ -10,10 +10,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 
 /**
  * Created by zyx10 on 2017/5/15 0015.
@@ -81,9 +80,9 @@ public class BloodPressureRecord implements Record {
             BloodPressureItem item = new BloodPressureItem();
             item.setDate(key);
             float lowAvg = Float.valueOf(new DecimalFormat("###.#").format(low/list.size()));
-            float hignAvg=Float.valueOf(new DecimalFormat("###.#").format(high/list.size()));
+            float highAvg=Float.valueOf(new DecimalFormat("###.#").format(high/list.size()));
             item.setDiastolicPressure(lowAvg);
-            item.setSystolicPressure(hignAvg);
+            item.setSystolicPressure(highAvg);
             bloodPressureItemListForChart.add(item);
         }
         Collections.sort(bloodPressureItemListForChart, new Comparator<BloodPressureItem>() {
