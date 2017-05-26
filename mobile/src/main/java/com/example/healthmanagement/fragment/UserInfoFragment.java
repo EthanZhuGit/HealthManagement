@@ -21,6 +21,13 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.activity.LoginActivity;
+import com.example.healthmanagement.model.BloodOxygenItem;
+import com.example.healthmanagement.model.BloodPressureItem;
+import com.example.healthmanagement.model.BloodSugarItem;
+import com.example.healthmanagement.model.HeartRateItem;
+import com.example.healthmanagement.model.User;
+
+import org.litepal.crud.DataSupport;
 
 /**
  * A simple {@link Fragment} subclass.

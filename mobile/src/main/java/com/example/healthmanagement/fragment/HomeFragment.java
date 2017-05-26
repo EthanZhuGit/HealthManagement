@@ -63,6 +63,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
     private ArrayList<IsCardShow> cardShowControlArrayList = new ArrayList<>();
     private boolean isBPDataDownLoad = false;
     private boolean isBSDataDownLoad = false;
+    private boolean isHRDataDownLoad=false;
 
     private User user;
     private String object_id;
@@ -205,6 +206,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                 && DataSupport.count(BloodOxygenItem.class) == 0) {
             downLoadBloodSugar(object_id, user);
             downLoadBloodPressure(object_id, user);
+            downLoadHeartRate(object_id,user);
         }
         return view;
     }
@@ -326,7 +328,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                         bloodSugarItem.save();
                     }
                     isBSDataDownLoad = true;
-                    if (isBPDataDownLoad && isBSDataDownLoad) {
+                    if (isBPDataDownLoad && isBSDataDownLoad&&isHRDataDownLoad) {
                         setRecordList();
                         cardListAdapter.notifyDataSetChanged();
                         Log.d(TAG, "done: " + "download complete");
@@ -365,7 +367,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                         item.save();
                     }
                     isBPDataDownLoad = true;
-                    if (isBPDataDownLoad && isBSDataDownLoad) {
+                    if (isBPDataDownLoad && isBSDataDownLoad&&isHRDataDownLoad) {
                         setRecordList();
                         cardListAdapter.notifyDataSetChanged();
                         Log.d(TAG, "done: " + "download complete");
@@ -377,6 +379,39 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
         });
 
 
+    }
+
+    private void downLoadHeartRate(String objectIdOfUser, final User user) {
+        AVQuery<AVObject> query = new AVQuery<>("heartrateitem");
+        query.selectKeys(Arrays.asList("date", "rate"));
+        query.whereEqualTo("user_object_id", objectIdOfUser);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    Log.d(TAG, "done: " + "heart rate download");
+                    for (AVObject object : list) {
+                        String object_id = object.getObjectId();
+                        Date date = object.getDate("date");
+                        int rate = object.getNumber("rate").intValue();
+                        HeartRateItem item = new HeartRateItem();
+                        item.setObject_id(object_id);
+                        item.setDate(date);
+                        item.setRate(rate);
+                        item.setUser(user);
+                        item.save();
+                    }
+                    isHRDataDownLoad = true;
+                    if (isBPDataDownLoad && isBSDataDownLoad && isHRDataDownLoad) {
+                        setRecordList();
+                        cardListAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "done: " + "download complete");
+                    }
+                } else {
+                    Log.d(TAG, "done: " + e.getMessage());
+                }
+            }
+        });
     }
 }
 

@@ -147,6 +147,7 @@ public class CloudDataBaseHelper {
                         }
                         String time = String.valueOf(item.getDate().getTime());
                         item.updateAll("date=?", time);
+
                     }
                 } else {
                     Log.d(TAG, "done: " + e.getMessage());
