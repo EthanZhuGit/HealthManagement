@@ -5,12 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.healthmanagement.activity.CardShowControlActivity">
 
     <com.mobeta.android.dslv.DragSortListView
         android:id="@+id/card_show_control_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         dslv:collapsed_height="2dp"
         dslv:drag_enabled="true"
         dslv:drag_scroll_start="0.33"
@@ -23,6 +24,17 @@
         dslv:sort_enabled="true"
         dslv:track_drag_sort="false"
         dslv:use_default_controller="true" />
+
+    <TextView
+        android:textAlignment="center"
+        android:text="按住左边滑块拖动以控制卡片显示顺序"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textAlignment="center"
+        android:text="点击右边开关控制卡片是否显示"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.healthmanagement.R;
 import com.example.healthmanagement.model.IsCardShow;
+import com.example.healthmanagement.model.Record;
 
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class CardControlAdapter extends BaseAdapter {
             view=convertView;
         }
         TextView name = (TextView) view.findViewById(R.id.textView1);
-        name.setText(isCardShow.getName());
+        name.setText(getChineseName(isCardShow.getName()));
         final Switch s = (Switch) view.findViewById(R.id.switcher);
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -94,5 +95,25 @@ public class CardControlAdapter extends BaseAdapter {
 
     public interface OnIsShowChangedListener{
         public void onIsShowChanged(int p,boolean isShow);
+    }
+
+
+    private String getChineseName(String s) {
+        String name="";
+        switch (s) {
+            case Record.BLOOD_PRESSURE:
+                name = "血压";
+                break;
+            case Record.BLOOD_SUGAR:
+                name = "血糖";
+                break;
+            case Record.HEART_RATE:
+                name = "心率";
+                break;
+            case Record.BLOOD_OXYGEN:
+                name = "血氧";
+                break;
+        }
+        return name;
     }
 }

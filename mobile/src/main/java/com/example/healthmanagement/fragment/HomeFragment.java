@@ -157,7 +157,7 @@ public class HomeFragment extends Fragment implements CardListAdapter.OnCardClic
                 }
                 break;
             case REQUEST_CODE_RECORD_HOME_TO_HRRA:
-                if (resultCode == REQUEST_CODE_RECORD_HOME_TO_HRRA) {
+                if (resultCode == HeartRateRecordActivity.RESULT_CODE_CHANGE_HRRA) {
                     Log.d(TAG, "onActivityResult: " + "data change from hrra");
                     Record record = LocalDateBaseHelper.getHeartRateRecord(user_id);
                     if (records.contains(record)) {
