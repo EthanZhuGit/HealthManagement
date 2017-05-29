@@ -60,7 +60,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:background="#000000"/>
+                        android:background="@color/darkgrenn"/>
 
                     <TextView
                         android:layout_width="0dp"

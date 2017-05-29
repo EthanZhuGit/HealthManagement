@@ -6,7 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +20,8 @@ import com.squareup.picasso.Picasso;
 
 public class NewsDetailActivity extends AppCompatActivity {
 
-    private TextView txtNewsContent;
+//    private TextView txtNewsContent;
+    private WebView webNewsContent;
     private ImageView imageView;
     private String objectId;
     private TextView detailTitle;
@@ -33,7 +36,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        txtNewsContent = (TextView) findViewById(R.id.txt_news_content);
+//        txtNewsContent = (TextView) findViewById(R.id.txt_news_content);
+        webNewsContent= (WebView) findViewById(R.id.web_news_content);
         imageView = (ImageView) findViewById(R.id.news_item_image_activity);
         toolbarLayout= (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         objectId = getIntent().getStringExtra("goodsObjectId");
@@ -41,7 +45,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         avObject.fetchInBackground("owner", new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
-                txtNewsContent.setText(avObject.getString("content"));
+//                txtNewsContent.setText(avObject.getString("content"));
+                webNewsContent.loadData(avObject.getString("content"),"text/html;charset=UTF-8",null);
                 getSupportActionBar().setTitle(avObject.getString("title"));
                 if (avObject.getAVFile("image") != null) {
                     Picasso.with(NewsDetailActivity.this)

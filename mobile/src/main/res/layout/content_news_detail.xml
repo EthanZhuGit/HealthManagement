@@ -8,10 +8,9 @@
     tools:context="com.example.healthmanagement.activity.NewsDetailActivity"
     tools:showIn="@layout/activity_news_detail">
 
-    <TextView
-        android:id="@+id/txt_news_content"
+    <WebView
+        android:id="@+id/web_news_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" />
+        android:layout_height="wrap_content" />
 
 </android.support.v4.widget.NestedScrollView>
