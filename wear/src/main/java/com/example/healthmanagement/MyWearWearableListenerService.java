@@ -61,19 +61,16 @@ public class MyWearWearableListenerService extends WearableListenerService {
 
     private void sendData(int heartRateData) {
         final byte[] data=intToBytes(heartRateData);
-
             PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
             nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
                 @Override
                 public void onResult(NodeApi.GetConnectedNodesResult result) {
                     final List<Node> nodes = result.getNodes();
                     if (nodes != null) {
-                        Log.d(TAG, "onResult: "+nodes.size());
                         for (int i=0; i<nodes.size(); i++) {
                             final Node node = nodes.get(i);
                             Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),"getHeartRate", data);
                             Log.d(TAG, "onMessageReceived: "+"wear send msg");
-
                         }
                     }
                 }
@@ -88,14 +85,14 @@ public class MyWearWearableListenerService extends WearableListenerService {
         @Override
         public void onSensorChanged(SensorEvent event) {
             sensorChangedTimes++;
-            if (sensorChangedTimes > 5 && sensorChangedTimes <=10) {
+            if (sensorChangedTimes > 4 && sensorChangedTimes <=7) {
                 record++;
                 sum+=event.values[0];
                 Intent intent = new Intent("data_update");
                 intent.putExtra("rate", event.values[0]);
                 localBroadcastManager.sendBroadcast(intent);
                 Log.d(TAG, "onSensorChanged: "+record+" "+event.values[0]+" "+sum);
-            }else if (sensorChangedTimes>10){
+            }else if (sensorChangedTimes>7){
                 heartRate=(int)Math.round((sum/1.0)/record);
                 Log.d(TAG, "onSensorChanged: "+heartRate);
                 Intent intent = new Intent("data_avg");
